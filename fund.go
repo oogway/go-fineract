@@ -30,23 +30,23 @@ type FundsRequest struct{}
 
 type FundsResponse struct{}
 
-func (client NewClient) FundIncrement(request FundIncrementRequest) (FundIncrementResponse, error) {
-	log.Println("Fineractor increment fund called for NewClient")
+func (client Client) FundIncrement(request FundIncrementRequest) (FundIncrementResponse, error) {
+	log.Println("Fineractor increment fund called for Client")
 	return FundIncrementResponse{}, nil
 }
 
-func (client NewClient) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {
+func (client Client) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {
 	return FundDecrementResponse{}, nil
 }
 
-func (client NewClient) GetFundValue(request FundValueRequest) (FundValueResponse, error) {
+func (client Client) GetFundValue(request FundValueRequest) (FundValueResponse, error) {
 	return FundValueResponse{}, nil
 }
 
-func (client NewClient) GetFundAvailablity(request FundAvailablityRequest) (FundAvailablityResponse, error) {
+func (client Client) GetFundAvailablity(request FundAvailablityRequest) (FundAvailablityResponse, error) {
 	return FundAvailablityResponse{}, nil
 }
 
-func (client NewClient) GetFunds(request FundsRequest) (FundsResponse, error) {
+func (client Client) GetFunds(request FundsRequest) (FundsResponse, error) {
 	return FundsResponse{}, nil
 }
