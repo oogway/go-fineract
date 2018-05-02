@@ -7,8 +7,8 @@ type Client struct {
 	Option   FineractOption
 }
 
-func NewClient(hostName string, option FineractOption) *Client {
-	return &Client{
+func NewClient(hostName string, option FineractOption) Fineractor {
+	return Client{
 		HostName: hostName,
 		Option:   option,
 	}

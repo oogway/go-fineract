@@ -3,13 +3,13 @@ package fineractor
 type FineractMockOption struct{}
 
 type MockClient struct {
-	FolderPath string
-	Option     FineractMockOption
+	DirectoryPath string
+	Option        FineractMockOption
 }
 
-func NewMockClient(folderPath string, option FineractMockOption) *MockClient {
-	return &MockClient{
-		FolderPath: folderPath,
-		Option:     option,
+func NewMockClient(directoryPath string, option FineractMockOption) Fineractor {
+	return MockClient{
+		DirectoryPath: directoryPath,
+		Option:        option,
 	}
 }
