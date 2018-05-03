@@ -20,7 +20,15 @@ func (mockClient *MockClient) FundIncrement(fv FundIncrementRequest) (FundIncrem
 }
 
 func (client *MockClient) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {
-	return FundDecrementResponse{}, nil
+	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_decrement_success.json"))
+	if err != nil {
+		log.Println(err.Error())
+		return FundDecrementResponse{}, err
+	}
+
+	var response FundDecrementResponse
+	json.Unmarshal(jsonResp, &response)
+	return response, nil
 }
 
 func (client *MockClient) GetFundValue(request FundValueRequest) (FundValueResponse, error) {

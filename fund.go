@@ -26,9 +26,20 @@ type FundIncrementResponse struct {
 	ResourceId float64
 }
 
-type FundDecrementRequest struct{}
+type FundDecrementRequest struct {
+	Id                string `json:"-"`
+	Locale            string `json:"locale"`
+	DateFormat        string `json:"dateFormat"`
+	TransactionDate   string `json:"transactionDate"`
+	TransactionAmount string `json:"transactionAmount"`
+	PaymentTypeId     string `json:"paymentTypeId"`
+}
 
-type FundDecrementResponse struct{}
+type FundDecrementResponse struct {
+	OfficeId   float64
+	ClientId   float64
+	ResourceId float64
+}
 
 type FundValueRequest struct{}
 
@@ -77,7 +88,37 @@ func (client *Client) FundIncrement(request FundIncrementRequest) (FundIncrement
 }
 
 func (client *Client) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {
-	return FundDecrementResponse{}, nil
+	b, err := json.Marshal(request)
+	if err != nil {
+		log.Println(err)
+		return FundDecrementResponse{}, err
+	}
+	req, err := http.NewRequest("POST", client.HostName+request.Id+"/transactions?command=withdrawal", bytes.NewBuffer(b))
+	if err != nil {
+		log.Println(err)
+		return FundDecrementResponse{}, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("fineract-platform-tenantid", "default")
+	// TODO: Add a better way to generate this authorisation
+	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+
+	respTry, errTry := rh.Try(3, func() (interface{}, error) {
+		return client.HttpClient.Do(req)
+	})
+	if errTry != nil {
+		return FundDecrementResponse{}, errors.New(errTry.Error())
+	}
+	resp := respTry.(*http.Response)
+	defer resp.Body.Close()
+
+	var response FundDecrementResponse
+	body, _ := ioutil.ReadAll(resp.Body)
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		panic(err)
+	}
+	return response, err
 }
 
 func (client *Client) GetFundValue(request FundValueRequest) (FundValueResponse, error) {
