@@ -1,10 +1,18 @@
 package fineractor
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"log"
+	"net/http"
+
+	rh "github.com/tsocial/credit-line-common/retryable-http"
 )
 
 type FundIncrementRequest struct {
+	Id                string `json:"-"`
 	Locale            string `json:"locale"`
 	DateFormat        string `json:"dateFormat"`
 	TransactionDate   string `json:"transactionDate"`
@@ -12,7 +20,11 @@ type FundIncrementRequest struct {
 	PaymentTypeId     string `json:"paymentTypeId"`
 }
 
-type FundIncrementResponse struct{}
+type FundIncrementResponse struct {
+	OfficeId   float64
+	ClientId   float64
+	ResourceId float64
+}
 
 type FundDecrementRequest struct{}
 
@@ -31,8 +43,37 @@ type FundsRequest struct{}
 type FundsResponse struct{}
 
 func (client *Client) FundIncrement(request FundIncrementRequest) (FundIncrementResponse, error) {
-	log.Println("Fineractor increment fund called for Client")
-	return FundIncrementResponse{}, nil
+	b, err := json.Marshal(request)
+	if err != nil {
+		log.Println(err)
+		return FundIncrementResponse{}, err
+	}
+	req, err := http.NewRequest("POST", client.HostName+request.Id+"/transactions?command=deposit", bytes.NewBuffer(b))
+	if err != nil {
+		log.Println(err)
+		return FundIncrementResponse{}, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("fineract-platform-tenantid", "default")
+	// TODO: Add a better way to generate this authorisation
+	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+
+	respTry, errTry := rh.Try(3, func() (interface{}, error) {
+		return client.HttpClient.Do(req)
+	})
+	if errTry != nil {
+		return FundIncrementResponse{}, errors.New(errTry.Error())
+	}
+	resp := respTry.(*http.Response)
+	defer resp.Body.Close()
+
+	var response FundIncrementResponse
+	body, _ := ioutil.ReadAll(resp.Body)
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		panic(err)
+	}
+	return response, err
 }
 
 func (client *Client) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {

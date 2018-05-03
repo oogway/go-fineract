@@ -1,12 +1,22 @@
 package fineractor
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
+	"path"
 )
 
 func (mockClient *MockClient) FundIncrement(fv FundIncrementRequest) (FundIncrementResponse, error) {
-	log.Println("Fineractor increment fund called for NewMockClient")
-	return FundIncrementResponse{}, nil
+	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_increment_success.json"))
+	if err != nil {
+		log.Println(err.Error())
+		return FundIncrementResponse{}, err
+	}
+
+	var response FundIncrementResponse
+	json.Unmarshal(jsonResp, &response)
+	return response, nil
 }
 
 func (client *MockClient) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {
