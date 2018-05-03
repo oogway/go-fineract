@@ -7,8 +7,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
+	"path"
 
-	rh "github.com/tsocial/credit-line-common/retryable-http"
+	"github.com/meson10/highbrow"
 )
 
 type FundIncrementRequest struct {
@@ -41,9 +43,22 @@ type FundDecrementResponse struct {
 	ResourceId float64
 }
 
-type FundValueRequest struct{}
+type FundValueRequest struct {
+	Id string `json:"-"`
+}
 
-type FundValueResponse struct{}
+type Summary struct {
+	Amount           float64 `json:"accountBalance"`
+	TotalDeposits    float64 `json:"totalDeposits"`
+	TotalWithdrawals float64 `json:"totalWithdrawals"`
+}
+
+type FundValueResponse struct {
+	AccountNo  string  `json:"accountNo"`
+	ClientId   int64   `json:"clientId"`
+	ClientName string  `json:"clientName"`
+	Statement  Summary `json:"summary"`
+}
 
 type FundAvailablityRequest struct{}
 
@@ -53,29 +68,32 @@ type FundsRequest struct{}
 
 type FundsResponse struct{}
 
-func (client *Client) FundIncrement(request FundIncrementRequest) (FundIncrementResponse, error) {
+func (client *Client) FundIncrement(request FundIncrementRequest) (*FundIncrementResponse, error) {
 	b, err := json.Marshal(request)
 	if err != nil {
 		log.Println(err)
-		return FundIncrementResponse{}, err
+		return nil, err
 	}
-	req, err := http.NewRequest("POST", client.HostName+request.Id+"/transactions?command=deposit", bytes.NewBuffer(b))
+	tempPath, _ := url.Parse(path.Join(request.Id, "transactions?command=deposit"))
+	path := client.HostName.ResolveReference(tempPath).String()
+	req, err := http.NewRequest("POST", path, bytes.NewBuffer(b))
 	if err != nil {
 		log.Println(err)
-		return FundIncrementResponse{}, err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
 	// TODO: Add a better way to generate this authorisation
 	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
 
-	respTry, errTry := rh.Try(3, func() (interface{}, error) {
-		return client.HttpClient.Do(req)
+	var resp *http.Response
+	errTry := highbrow.Try(5, func() error {
+		resp, err = client.HttpClient.Do(req)
+		return err
 	})
 	if errTry != nil {
-		return FundIncrementResponse{}, errors.New(errTry.Error())
+		return nil, errors.New(errTry.Error())
 	}
-	resp := respTry.(*http.Response)
 	defer resp.Body.Close()
 
 	var response FundIncrementResponse
@@ -84,32 +102,36 @@ func (client *Client) FundIncrement(request FundIncrementRequest) (FundIncrement
 	if err != nil {
 		panic(err)
 	}
-	return response, err
+	return &response, err
 }
 
-func (client *Client) FundDecrement(request FundDecrementRequest) (FundDecrementResponse, error) {
+func (client *Client) FundDecrement(request FundDecrementRequest) (*FundDecrementResponse, error) {
 	b, err := json.Marshal(request)
 	if err != nil {
 		log.Println(err)
-		return FundDecrementResponse{}, err
+		return nil, err
 	}
-	req, err := http.NewRequest("POST", client.HostName+request.Id+"/transactions?command=withdrawal", bytes.NewBuffer(b))
+	tempPath, _ := url.Parse(path.Join(request.Id, "transactions?command=withdrawal"))
+	path := client.HostName.ResolveReference(tempPath).String()
+	log.Println(path)
+	req, err := http.NewRequest("POST", path, bytes.NewBuffer(b))
 	if err != nil {
 		log.Println(err)
-		return FundDecrementResponse{}, err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
 	// TODO: Add a better way to generate this authorisation
 	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
 
-	respTry, errTry := rh.Try(3, func() (interface{}, error) {
-		return client.HttpClient.Do(req)
+	var resp *http.Response
+	errTry := highbrow.Try(5, func() error {
+		resp, err = client.HttpClient.Do(req)
+		return err
 	})
 	if errTry != nil {
-		return FundDecrementResponse{}, errors.New(errTry.Error())
+		return nil, errors.New(errTry.Error())
 	}
-	resp := respTry.(*http.Response)
 	defer resp.Body.Close()
 
 	var response FundDecrementResponse
@@ -118,17 +140,40 @@ func (client *Client) FundDecrement(request FundDecrementRequest) (FundDecrement
 	if err != nil {
 		panic(err)
 	}
-	return response, err
+	return &response, err
 }
 
-func (client *Client) GetFundValue(request FundValueRequest) (FundValueResponse, error) {
-	return FundValueResponse{}, nil
+func (client *Client) GetFundValue(request FundValueRequest) (*FundValueResponse, error) {
+	tempPath, _ := url.Parse(request.Id)
+	req, err := http.NewRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("fineract-platform-tenantid", "default")
+	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+
+	var resp *http.Response
+	errTry := highbrow.Try(5, func() error {
+		resp, err = client.HttpClient.Do(req)
+		return err
+	})
+	if errTry != nil {
+		return nil, errors.New(errTry.Error())
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	var response FundValueResponse
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		panic(err)
+	}
+	return &response, err
 }
 
-func (client *Client) GetFundAvailablity(request FundAvailablityRequest) (FundAvailablityResponse, error) {
-	return FundAvailablityResponse{}, nil
+func (client *Client) GetFundAvailablity(request FundAvailablityRequest) (*FundAvailablityResponse, error) {
+	return nil, nil
 }
 
-func (client *Client) GetFunds(request FundsRequest) (FundsResponse, error) {
-	return FundsResponse{}, nil
+func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
+	return nil, nil
 }
