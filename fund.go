@@ -72,12 +72,20 @@ type AuthenticationKey struct {
 	Data string `json:"base64EncodedAuthenticationKey"`
 }
 
+func (client *Client) GetFieldsMap() map[string]interface{} {
+	fields := make(map[string]interface{})
+	fields["HostName"] = client.HostName.String()
+	fields["UserName"] = client.UserName
+	fields["Password"] = client.Password
+	return fields
+}
+
 func basicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
-func (client *Client) makeRequest(reqType, url string, payload interface{}, response interface{}) error {
+func (client *Client) MakeRequest(reqType, url string, payload interface{}, response interface{}) error {
 	b, err := json.Marshal(payload)
 	if err != nil {
 		log.Println(err)
@@ -122,7 +130,7 @@ func (client *Client) FundIncrement(fundId string, request FundIncrementRequest)
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundIncrementResponse
-	if err := client.makeRequest("POST", path, request, &response); err != nil {
+	if err := client.MakeRequest("POST", path, request, &response); err != nil {
 		return nil, err
 	}
 
@@ -133,7 +141,7 @@ func (client *Client) FundDecrement(fundId string, request FundDecrementRequest)
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=withdrawal"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundDecrementResponse
-	if err := client.makeRequest("POST", path, request, &response); err != nil {
+	if err := client.MakeRequest("POST", path, request, &response); err != nil {
 		return nil, err
 	}
 
@@ -143,7 +151,7 @@ func (client *Client) FundDecrement(fundId string, request FundDecrementRequest)
 func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*FundValueResponse, error) {
 	tempPath, _ := url.Parse(fundId)
 	var response *FundValueResponse
-	if err := client.makeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
+	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
 		return nil, err
 	}
 
@@ -152,7 +160,7 @@ func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*Fu
 
 func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
 	var response *FundsResponse
-	if err := client.makeRequest("GET", client.HostName.String(), nil, &response); err != nil {
+	if err := client.MakeRequest("GET", client.HostName.String(), nil, &response); err != nil {
 		return nil, err
 	}
 
