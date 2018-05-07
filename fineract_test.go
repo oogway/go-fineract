@@ -1,4 +1,4 @@
-package fineractor
+package fineract
 
 import (
 	"fmt"
