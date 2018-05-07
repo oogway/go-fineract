@@ -11,6 +11,8 @@ type FineractOption struct{}
 
 type Client struct {
 	HostName   *url.URL
+	UserName   string
+	Password   string
 	Option     FineractOption
 	HttpClient *http.Client
 }
@@ -18,7 +20,7 @@ type Client struct {
 var once sync.Once
 var client Client
 
-func NewClient(hostName string, option FineractOption) (Fineractor, error) {
+func NewClient(hostName, userName, password string, option FineractOption) (Fineractor, error) {
 	host, err := url.Parse(hostName)
 	if err != nil {
 		log.Println(err)
@@ -27,6 +29,8 @@ func NewClient(hostName string, option FineractOption) (Fineractor, error) {
 	once.Do(func() {
 		client = Client{
 			HostName:   host,
+			UserName:   userName,
+			Password:   password,
 			Option:     option,
 			HttpClient: &http.Client{},
 		}
