@@ -27,6 +27,8 @@ const (
 	ErrCodeResponseTimeout = "ResponseTimeout"
 
 	ErrInternalServer = "InternalServerError"
+
+	ErrAuthenticationFailure = "AuthenticationFailure"
 )
 
 func GetFineractStatusCode(code int) string {

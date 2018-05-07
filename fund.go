@@ -9,8 +9,13 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"strings"
 
 	"github.com/meson10/highbrow"
+)
+
+var (
+	authenticationKey AuthenticationKey
 )
 
 type FundIncrementRequest struct {
@@ -68,6 +73,53 @@ type FundsResponse struct {
 	FundDetail           []FundValueResponse `json:"pageItems"`
 }
 
+type AuthenticationKey struct {
+	Data string `json:"base64EncodedAuthenticationKey"`
+}
+
+// TODO: The service will send username and password in headers
+func getAuthenticationKey() (string, error) {
+	if authenticationKey.Data != "" {
+		return authenticationKey.Data, nil
+	}
+	tempPath, _ := url.Parse("authentication?username=mifos&password=password")
+	tempPath1 := client.HostName.ResolveReference(tempPath).String()
+	path := strings.Replace(tempPath1, "/savingsaccounts", "", -1)
+	req, err := http.NewRequest("POST", path, bytes.NewBuffer([]byte{}))
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("fineract-platform-tenantid", "default")
+
+	var resp *http.Response
+	errTry := highbrow.Try(5, func() error {
+		resp, err = client.HttpClient.Do(req)
+		return err
+	})
+	if errTry != nil {
+		log.Println(errTry.Error())
+		rawMessage := json.RawMessage([]byte(errTry.Error()))
+		return "", &FineractError{ErrCodeSerialization, &rawMessage}
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	if resp.StatusCode != 200 {
+		rawMessage := json.RawMessage(body)
+		return "", &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
+	}
+
+	err = json.Unmarshal(body, &authenticationKey)
+	if err != nil {
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return "", &FineractError{ErrCodeSerialization, &rawMessage}
+	}
+	return authenticationKey.Data, err
+
+}
+
 func (client *Client) FundIncrement(request FundIncrementRequest) (*FundIncrementResponse, error) {
 	b, err := json.Marshal(request)
 	if err != nil {
@@ -83,8 +135,12 @@ func (client *Client) FundIncrement(request FundIncrementRequest) (*FundIncremen
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
-	// TODO: Add a better way to generate this authorisation
-	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+	authKey, err := getAuthenticationKey()
+	if err != nil {
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
+	}
+	req.Header.Set("Authorization", "Basic "+authKey)
 
 	var resp *http.Response
 	errTry := highbrow.Try(5, func() error {
@@ -127,8 +183,12 @@ func (client *Client) FundDecrement(request FundDecrementRequest) (*FundDecremen
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
-	// TODO: Add a better way to generate this authorisation
-	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+	authKey, err := getAuthenticationKey()
+	if err != nil {
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
+	}
+	req.Header.Set("Authorization", "Basic "+authKey)
 
 	var resp *http.Response
 	errTry := highbrow.Try(5, func() error {
@@ -162,10 +222,14 @@ func (client *Client) GetFundValue(request FundValueRequest) (*FundValueResponse
 	req, _ := http.NewRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
-	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+	authKey, err := getAuthenticationKey()
+	if err != nil {
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
+	}
+	req.Header.Set("Authorization", "Basic "+authKey)
 
 	var resp *http.Response
-	var err error
 	errTry := highbrow.Try(5, func() error {
 		resp, err = client.HttpClient.Do(req)
 		return err
@@ -195,10 +259,14 @@ func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
 	req, _ := http.NewRequest("GET", client.HostName.String(), nil)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
-	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+	authKey, err := getAuthenticationKey()
+	if err != nil {
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
+	}
+	req.Header.Set("Authorization", "Basic "+authKey)
 
 	var resp *http.Response
-	var err error
 	errTry := highbrow.Try(5, func() error {
 		resp, err = client.HttpClient.Do(req)
 		return err
@@ -210,10 +278,16 @@ func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	var fds FundsResponse
-	err = json.Unmarshal(body, &fds)
+	var response FundsResponse
+	err = json.Unmarshal(body, &response)
 	if err != nil {
-		panic(err)
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return nil, &FineractError{ErrCodeSerialization, &rawMessage}
 	}
-	return nil, nil
+	if resp.StatusCode != 200 {
+		rawMessage := json.RawMessage(body)
+		return nil, &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
+	}
+
+	return &response, err
 }
