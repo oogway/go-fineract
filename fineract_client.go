@@ -7,32 +7,39 @@ import (
 	"sync"
 )
 
-type FineractOption struct{}
+type Transporter interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+type FineractOption struct {
+	Transport Transporter
+}
 
 type Client struct {
-	HostName   *url.URL
-	UserName   string
-	Password   string
-	Option     FineractOption
-	HttpClient *http.Client
+	HostName *url.URL
+	UserName string
+	Password string
+	Option   FineractOption
 }
 
 var once sync.Once
 var client Client
 
-func NewClient(hostName, userName, password string, option FineractOption) (Fineractor, error) {
+func NewClient(hostName, userName, password string, option FineractOption) (*Client, error) {
 	host, err := url.Parse(hostName)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	once.Do(func() {
+		if option.Transport == nil {
+			option.Transport = &http.Client{}
+		}
 		client = Client{
-			HostName:   host,
-			UserName:   userName,
-			Password:   password,
-			Option:     option,
-			HttpClient: &http.Client{},
+			HostName: host,
+			UserName: userName,
+			Password: password,
+			Option:   option,
 		}
 	})
 	return &client, err

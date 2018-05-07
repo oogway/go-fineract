@@ -72,14 +72,6 @@ type AuthenticationKey struct {
 	Data string `json:"base64EncodedAuthenticationKey"`
 }
 
-func (client *Client) GetFieldsMap() map[string]interface{} {
-	fields := make(map[string]interface{})
-	fields["HostName"] = client.HostName.String()
-	fields["UserName"] = client.UserName
-	fields["Password"] = client.Password
-	return fields
-}
-
 func basicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
@@ -103,7 +95,7 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 
 	var resp *http.Response
 	errTry := highbrow.Try(5, func() error {
-		resp, err = client.HttpClient.Do(req)
+		resp, err = client.Option.Transport.Do(req)
 		return err
 	})
 	if errTry != nil {
@@ -126,7 +118,7 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	return nil
 }
 
-func (client *Client) FundIncrement(fundId string, request FundIncrementRequest) (*FundIncrementResponse, error) {
+func (client *Client) FundIncrement(fundId string, request *FundIncrementRequest) (*FundIncrementResponse, error) {
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundIncrementResponse
@@ -137,7 +129,7 @@ func (client *Client) FundIncrement(fundId string, request FundIncrementRequest)
 	return response, nil
 }
 
-func (client *Client) FundDecrement(fundId string, request FundDecrementRequest) (*FundDecrementResponse, error) {
+func (client *Client) FundDecrement(fundId string, request *FundDecrementRequest) (*FundDecrementResponse, error) {
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=withdrawal"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundDecrementResponse
@@ -148,7 +140,7 @@ func (client *Client) FundDecrement(fundId string, request FundDecrementRequest)
 	return response, nil
 }
 
-func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*FundValueResponse, error) {
+func (client *Client) GetFundValue(fundId string, request *FundValueRequest) (*FundValueResponse, error) {
 	tempPath, _ := url.Parse(fundId)
 	var response *FundValueResponse
 	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
@@ -158,7 +150,7 @@ func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*Fu
 	return response, nil
 }
 
-func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
+func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
 	var response *FundsResponse
 	if err := client.MakeRequest("GET", client.HostName.String(), nil, &response); err != nil {
 		return nil, err
