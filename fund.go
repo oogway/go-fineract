@@ -54,19 +54,19 @@ type Summary struct {
 }
 
 type FundValueResponse struct {
+	Id         int64   `json:"id"`
 	AccountNo  string  `json:"accountNo"`
 	ClientId   int64   `json:"clientId"`
 	ClientName string  `json:"clientName"`
 	Statement  Summary `json:"summary"`
 }
 
-type FundAvailablityRequest struct{}
-
-type FundAvailablityResponse struct{}
-
 type FundsRequest struct{}
 
-type FundsResponse struct{}
+type FundsResponse struct {
+	TotalFilteredRecords int64               `json:"totalFilteredRecords"`
+	FundDetail           []FundValueResponse `json:"pageItems"`
+}
 
 func (client *Client) FundIncrement(request FundIncrementRequest) (*FundIncrementResponse, error) {
 	b, err := json.Marshal(request)
@@ -191,10 +191,29 @@ func (client *Client) GetFundValue(request FundValueRequest) (*FundValueResponse
 	return &response, err
 }
 
-func (client *Client) GetFundAvailablity(request FundAvailablityRequest) (*FundAvailablityResponse, error) {
-	return nil, nil
-}
-
 func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
+	req, _ := http.NewRequest("GET", client.HostName.String(), nil)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("fineract-platform-tenantid", "default")
+	req.Header.Set("Authorization", "Basic bWlmb3M6cGFzc3dvcmQ=")
+
+	var resp *http.Response
+	var err error
+	errTry := highbrow.Try(5, func() error {
+		resp, err = client.HttpClient.Do(req)
+		return err
+	})
+
+	if errTry != nil {
+		return nil, errors.New(errTry.Error())
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	var fds FundsResponse
+	err = json.Unmarshal(body, &fds)
+	if err != nil {
+		panic(err)
+	}
 	return nil, nil
 }

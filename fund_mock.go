@@ -8,7 +8,7 @@ import (
 )
 
 func (mockClient *MockClient) FundIncrement(fv FundIncrementRequest) (*FundIncrementResponse, error) {
-	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_increment_success.json"))
+	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_increment.json"))
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
@@ -19,26 +19,29 @@ func (mockClient *MockClient) FundIncrement(fv FundIncrementRequest) (*FundIncre
 	return &response, nil
 }
 
-func (client *MockClient) FundDecrement(request FundDecrementRequest) (*FundDecrementResponse, error) {
-	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_decrement_success.json"))
+func (mockClient *MockClient) FundDecrement(request FundDecrementRequest) (*FundDecrementResponse, error) {
+	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_decrement.json"))
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
 	}
-
 	var response FundDecrementResponse
 	json.Unmarshal(jsonResp, &response)
 	return &response, nil
 }
 
-func (client *MockClient) GetFundValue(request FundValueRequest) (*FundValueResponse, error) {
-	return nil, nil
+func (mockClient *MockClient) GetFundValue(request FundValueRequest) (*FundValueResponse, error) {
+	jsonResp, err := ioutil.ReadFile(path.Join(mockClient.DirectoryPath, "fund_value.json"))
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	var response FundValueResponse
+	json.Unmarshal(jsonResp, &response)
+	return &response, nil
 }
 
-func (client *MockClient) GetFundAvailablity(request FundAvailablityRequest) (*FundAvailablityResponse, error) {
-	return nil, nil
-}
-
-func (client *MockClient) GetFunds(request FundsRequest) (*FundsResponse, error) {
+func (mockClient *MockClient) GetFunds(request FundsRequest) (*FundsResponse, error) {
 	return nil, nil
 }
