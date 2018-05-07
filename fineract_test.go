@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewClient(t *testing.T) {
-	hostName := "https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/"
+	hostName := "https://demo.openmf.org"
 	userName := "mifos"
 	password := "password"
 
@@ -28,7 +28,7 @@ func TestNewClient(t *testing.T) {
 
 func TestGetFundValue(t *testing.T) {
 	t.Run("Should decrement fund", func(t *testing.T) {
-		client, err := NewClient("https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/", "mifos", "password", FineractOption{
+		client, err := NewClient("https://demo.openmf.org", "mifos", "password", FineractOption{
 			Transport: &MockTransport{DirectoryPath: "testdata"},
 		})
 		if err != nil {
@@ -48,7 +48,7 @@ func TestGetFundValue(t *testing.T) {
 
 func TestFundIncrement(t *testing.T) {
 	t.Run("Should decrement fund", func(t *testing.T) {
-		client, err := NewClient("https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/", "mifos", "password", FineractOption{
+		client, err := NewClient("https://demo.openmf.org", "mifos", "password", FineractOption{
 			Transport: &MockTransport{DirectoryPath: "testdata"},
 		})
 		if err != nil {
@@ -64,7 +64,7 @@ func TestFundIncrement(t *testing.T) {
 
 func TestDecrementIncrement(t *testing.T) {
 	t.Run("Should decrement fund", func(t *testing.T) {
-		client, err := NewClient("https://demo.openmf.org/fineract-provider/api/v1/savingsaccounts/", "mifos", "password", FineractOption{
+		client, err := NewClient("https://demo.openmf.org", "mifos", "password", FineractOption{
 			Transport: &MockTransport{DirectoryPath: "testdata"},
 		})
 		if err != nil {

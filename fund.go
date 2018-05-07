@@ -119,7 +119,7 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 }
 
 func (client *Client) FundIncrement(fundId string, request *FundIncrementRequest) (*FundIncrementResponse, error) {
-	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/savingsaccounts", path.Join(fundId, "transactions?command=deposit")))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundIncrementResponse
 	if err := client.MakeRequest("POST", path, request, &response); err != nil {
@@ -130,7 +130,7 @@ func (client *Client) FundIncrement(fundId string, request *FundIncrementRequest
 }
 
 func (client *Client) FundDecrement(fundId string, request *FundDecrementRequest) (*FundDecrementResponse, error) {
-	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=withdrawal"))
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/savingsaccounts", path.Join(fundId, "transactions?command=withdrawal")))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundDecrementResponse
 	if err := client.MakeRequest("POST", path, request, &response); err != nil {
@@ -141,7 +141,7 @@ func (client *Client) FundDecrement(fundId string, request *FundDecrementRequest
 }
 
 func (client *Client) GetFundValue(fundId string, request *FundValueRequest) (*FundValueResponse, error) {
-	tempPath, _ := url.Parse(fundId)
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/savingsaccounts", fundId))
 	var response *FundValueResponse
 	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
 		return nil, err
@@ -151,8 +151,9 @@ func (client *Client) GetFundValue(fundId string, request *FundValueRequest) (*F
 }
 
 func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
+	tempPath, _ := url.Parse("fineract-provider/api/v1/savingsaccounts")
 	var response *FundsResponse
-	if err := client.MakeRequest("GET", client.HostName.String(), nil, &response); err != nil {
+	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
 		return nil, err
 	}
 
