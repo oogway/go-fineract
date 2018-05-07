@@ -19,7 +19,6 @@ var (
 )
 
 type FundIncrementRequest struct {
-	Id                string `json:"-"`
 	Locale            string `json:"locale"`
 	DateFormat        string `json:"dateFormat"`
 	TransactionDate   string `json:"transactionDate"`
@@ -28,13 +27,12 @@ type FundIncrementRequest struct {
 }
 
 type FundIncrementResponse struct {
-	OfficeId   float64
-	ClientId   float64
-	ResourceId float64
+	OfficeId   float64 `json:"officeId"`
+	ClientId   float64 `json:"clientId"`
+	ResourceId float64 `json:"resourceId"`
 }
 
 type FundDecrementRequest struct {
-	Id                string `json:"-"`
 	Locale            string `json:"locale"`
 	DateFormat        string `json:"dateFormat"`
 	TransactionDate   string `json:"transactionDate"`
@@ -43,14 +41,12 @@ type FundDecrementRequest struct {
 }
 
 type FundDecrementResponse struct {
-	OfficeId   float64
-	ClientId   float64
-	ResourceId float64
+	OfficeId   float64 `json:"officeId"`
+	ClientId   float64 `json:"clientId"`
+	ResourceId float64 `json:"resourceId"`
 }
 
-type FundValueRequest struct {
-	Id string `json:"-"`
-}
+type FundValueRequest struct{}
 
 type Summary struct {
 	Amount           float64 `json:"accountBalance"`
@@ -120,13 +116,13 @@ func getAuthenticationKey() (string, error) {
 
 }
 
-func (client *Client) FundIncrement(request FundIncrementRequest) (*FundIncrementResponse, error) {
+func (client *Client) FundIncrement(fundId string, request FundIncrementRequest) (*FundIncrementResponse, error) {
 	b, err := json.Marshal(request)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	tempPath, _ := url.Parse(path.Join(request.Id, "transactions?command=deposit"))
+	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	req, err := http.NewRequest("POST", path, bytes.NewBuffer(b))
 	if err != nil {
@@ -168,13 +164,13 @@ func (client *Client) FundIncrement(request FundIncrementRequest) (*FundIncremen
 	return &response, err
 }
 
-func (client *Client) FundDecrement(request FundDecrementRequest) (*FundDecrementResponse, error) {
+func (client *Client) FundDecrement(fundId string, request FundDecrementRequest) (*FundDecrementResponse, error) {
 	b, err := json.Marshal(request)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	tempPath, _ := url.Parse(path.Join(request.Id, "transactions?command=withdrawal"))
+	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=withdrawal"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	req, err := http.NewRequest("POST", path, bytes.NewBuffer(b))
 	if err != nil {
@@ -217,8 +213,8 @@ func (client *Client) FundDecrement(request FundDecrementRequest) (*FundDecremen
 	return &response, err
 }
 
-func (client *Client) GetFundValue(request FundValueRequest) (*FundValueResponse, error) {
-	tempPath, _ := url.Parse(request.Id)
+func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*FundValueResponse, error) {
+	tempPath, _ := url.Parse(fundId)
 	req, _ := http.NewRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
