@@ -26,17 +26,23 @@ const (
 	// during body reads.
 	ErrCodeResponseTimeout = "ResponseTimeout"
 
+	// ErrInternalServer is the internal server error
 	ErrInternalServer = "InternalServerError"
 
+	// ErrAuthenticationFailure is the code returned when there is a athentication failure
 	ErrAuthenticationFailure = "AuthenticationFailure"
 )
 
 func GetFineractStatusCode(code int) string {
 	switch code {
-	case 404:
-		return ErrNotFound
 	case 400:
 		return ErrBadRequest
+	case 401:
+		return ErrAuthenticationFailure
+	case 404:
+		return ErrNotFound
+	case 500:
+		return ErrInternalServer
 	}
 	return ErrInternalServer
 }

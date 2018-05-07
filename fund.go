@@ -110,56 +110,51 @@ func (client *Client) makeRequest(reqType, url string, payload interface{}, resp
 		return &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
 	}
 
-	err = json.Unmarshal(body, &response)
-	if err != nil {
+	if err = json.Unmarshal(body, &response); err != nil {
 		rawMessage := json.RawMessage([]byte(err.Error()))
 		return &FineractError{ErrCodeSerialization, &rawMessage}
 	}
 
-	return err
+	return nil
 }
 
 func (client *Client) FundIncrement(fundId string, request FundIncrementRequest) (*FundIncrementResponse, error) {
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundIncrementResponse
-	err := client.makeRequest("POST", path, request, &response)
-	if err != nil {
+	if err := client.makeRequest("POST", path, request, &response); err != nil {
 		return nil, err
 	}
 
-	return response, err
+	return response, nil
 }
 
 func (client *Client) FundDecrement(fundId string, request FundDecrementRequest) (*FundDecrementResponse, error) {
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=withdrawal"))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *FundDecrementResponse
-	err := client.makeRequest("POST", path, request, &response)
-	if err != nil {
+	if err := client.makeRequest("POST", path, request, &response); err != nil {
 		return nil, err
 	}
 
-	return response, err
+	return response, nil
 }
 
 func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*FundValueResponse, error) {
 	tempPath, _ := url.Parse(fundId)
 	var response *FundValueResponse
-	err := client.makeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response)
-	if err != nil {
+	if err := client.makeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
 		return nil, err
 	}
 
-	return response, err
+	return response, nil
 }
 
 func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
 	var response *FundsResponse
-	err := client.makeRequest("GET", client.HostName.String(), nil, &response)
-	if err != nil {
+	if err := client.makeRequest("GET", client.HostName.String(), nil, &response); err != nil {
 		return nil, err
 	}
 
-	return response, err
+	return response, nil
 }
