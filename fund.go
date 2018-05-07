@@ -3,7 +3,6 @@ package fineractor
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -112,19 +111,19 @@ func getAuthenticationKey() (string, error) {
 		rawMessage := json.RawMessage([]byte(err.Error()))
 		return "", &FineractError{ErrCodeSerialization, &rawMessage}
 	}
+
 	return authenticationKey.Data, err
 
 }
 
-func (client *Client) FundIncrement(fundId string, request FundIncrementRequest) (*FundIncrementResponse, error) {
-	b, err := json.Marshal(request)
+func makeRequest(reqType, url string, payload interface{}) ([]byte, error) {
+	b, err := json.Marshal(payload)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
-	path := client.HostName.ResolveReference(tempPath).String()
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(b))
+
+	req, err := http.NewRequest(reqType, url, bytes.NewBuffer(b))
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -155,54 +154,33 @@ func (client *Client) FundIncrement(fundId string, request FundIncrementRequest)
 		return nil, &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
 	}
 
+	return body, err
+}
+
+func (client *Client) FundIncrement(fundId string, request FundIncrementRequest) (*FundIncrementResponse, error) {
+	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=deposit"))
+	path := client.HostName.ResolveReference(tempPath).String()
+	body, err := makeRequest("POST", path, request)
+	if err != nil {
+		return nil, err
+	}
 	var response FundIncrementResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		rawMessage := json.RawMessage([]byte(err.Error()))
 		return nil, &FineractError{ErrCodeSerialization, &rawMessage}
 	}
+
 	return &response, err
 }
 
 func (client *Client) FundDecrement(fundId string, request FundDecrementRequest) (*FundDecrementResponse, error) {
-	b, err := json.Marshal(request)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
 	tempPath, _ := url.Parse(path.Join(fundId, "transactions?command=withdrawal"))
 	path := client.HostName.ResolveReference(tempPath).String()
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(b))
+	body, err := makeRequest("POST", path, request)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("fineract-platform-tenantid", "default")
-	authKey, err := getAuthenticationKey()
-	if err != nil {
-		rawMessage := json.RawMessage([]byte(err.Error()))
-		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
-	}
-	req.Header.Set("Authorization", "Basic "+authKey)
-
-	var resp *http.Response
-	errTry := highbrow.Try(5, func() error {
-		resp, err = client.HttpClient.Do(req)
-		return err
-	})
-	if errTry != nil {
-		rawMessage := json.RawMessage([]byte(errTry.Error()))
-		return nil, &FineractError{ErrCodeSerialization, &rawMessage}
-	}
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
-	if resp.StatusCode != 200 {
-		rawMessage := json.RawMessage(body)
-		return nil, &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
-	}
-
 	var response FundDecrementResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
@@ -215,74 +193,29 @@ func (client *Client) FundDecrement(fundId string, request FundDecrementRequest)
 
 func (client *Client) GetFundValue(fundId string, request FundValueRequest) (*FundValueResponse, error) {
 	tempPath, _ := url.Parse(fundId)
-	req, _ := http.NewRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("fineract-platform-tenantid", "default")
-	authKey, err := getAuthenticationKey()
+	body, err := makeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil)
 	if err != nil {
-		rawMessage := json.RawMessage([]byte(err.Error()))
-		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
+		return nil, err
 	}
-	req.Header.Set("Authorization", "Basic "+authKey)
-
-	var resp *http.Response
-	errTry := highbrow.Try(5, func() error {
-		resp, err = client.HttpClient.Do(req)
-		return err
-	})
-
-	if errTry != nil {
-		return nil, errors.New(errTry.Error())
-	}
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
 	var response FundValueResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		rawMessage := json.RawMessage([]byte(err.Error()))
 		return nil, &FineractError{ErrCodeSerialization, &rawMessage}
 	}
-	if resp.StatusCode != 200 {
-		rawMessage := json.RawMessage(body)
-		return nil, &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
-	}
-
 	return &response, err
 }
 
 func (client *Client) GetFunds(request FundsRequest) (*FundsResponse, error) {
-	req, _ := http.NewRequest("GET", client.HostName.String(), nil)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("fineract-platform-tenantid", "default")
-	authKey, err := getAuthenticationKey()
+	body, err := makeRequest("GET", client.HostName.String(), nil)
 	if err != nil {
-		rawMessage := json.RawMessage([]byte(err.Error()))
-		return nil, &FineractError{ErrAuthenticationFailure, &rawMessage}
+		return nil, err
 	}
-	req.Header.Set("Authorization", "Basic "+authKey)
-
-	var resp *http.Response
-	errTry := highbrow.Try(5, func() error {
-		resp, err = client.HttpClient.Do(req)
-		return err
-	})
-
-	if errTry != nil {
-		return nil, errors.New(errTry.Error())
-	}
-	defer resp.Body.Close()
-
-	body, _ := ioutil.ReadAll(resp.Body)
 	var response FundsResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		rawMessage := json.RawMessage([]byte(err.Error()))
 		return nil, &FineractError{ErrCodeSerialization, &rawMessage}
-	}
-	if resp.StatusCode != 200 {
-		rawMessage := json.RawMessage(body)
-		return nil, &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
 	}
 
 	return &response, err
