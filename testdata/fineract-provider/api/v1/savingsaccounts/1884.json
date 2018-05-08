@@ -1,0 +1,11 @@
+{
+    "accountNo": "TO000001884",
+    "clientId": 9,
+    "clientName": "Susan Wanjiru",
+    "summary": {
+        "totalDeposits": 5415,
+        "totalWithdrawals": 955,
+        "accountBalance": 4410,
+        "availableBalance": 4460
+    }
+}
