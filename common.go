@@ -28,13 +28,15 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	b, err := json.Marshal(payload)
 	if err != nil {
 		log.Println(err)
-		return err
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return &FineractError{ErrCodeSerialization, &rawMessage}
 	}
 
 	req, err := http.NewRequest(reqType, url, bytes.NewBuffer(b))
 	if err != nil {
 		log.Println(err)
-		return err
+		rawMessage := json.RawMessage([]byte(err.Error()))
+		return &FineractError{ErrBadRequest, &rawMessage}
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
@@ -52,6 +54,8 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
+	log.Println(string(body))
+	log.Println(resp.StatusCode)
 	if resp.StatusCode != 200 {
 		rawMessage := json.RawMessage(body)
 		return &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}

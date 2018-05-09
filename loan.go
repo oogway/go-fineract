@@ -3,9 +3,10 @@ package fineract
 import (
 	"log"
 	"net/url"
+	"path"
 )
 
-type CreateLoanRequest struct {
+type LoanCreateRequest struct {
 	Locale                        string `json:"locale"`
 	DateFormat                    string `json:"dateFormat"`
 	ExternalId                    string `json:"externalId"`
@@ -28,14 +29,16 @@ type CreateLoanRequest struct {
 	LinkAccountId                 string `json:"linkAccountId"`
 }
 
-type CreateLoanResponse struct {
+type LoanCreateResponse struct {
 	Id         float64 `json:"loanId"`
 	OfficeId   float64 `json:"officeId"`
 	CustomerId float64 `json:"clientId"`
 	ResourceId float64 `json:"resourceId"`
 }
 
-type UpdateLoanRequest struct {
+type LoanUpdateRequest struct {
+	Locale                string `json:"locale"`
+	DateFormat            string `json:"dateFormat"`
 	EMIId                 string `json:"productId"`
 	Term                  string `json:"loanTermFrequency"`
 	InstallmentsCount     string `json:"numberOfRepayments"`
@@ -43,19 +46,31 @@ type UpdateLoanRequest struct {
 	InterestRatePerPeriod string `json:"interestRatePerPeriod"`
 }
 
-type UpdateLoanResponse struct {
+type LoanUpdateResponse struct {
 	Id         float64 `json:"loanId"`
 	OfficeId   float64 `json:"officeId"`
 	CustomerId float64 `json:"clientId"`
 	ResourceId float64 `json:"resourceId"`
 }
 
-func (client *Client) CreateLoan(request *CreateLoanRequest) (*CreateLoanResponse, error) {
+func (client *Client) LoanCreate(request *LoanCreateRequest) (*LoanCreateResponse, error) {
 	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
 	path := client.HostName.ResolveReference(tempPath).String()
-	var response *CreateLoanResponse
+	var response *LoanCreateResponse
 	if err := client.MakeRequest("POST", path, request, &response); err != nil {
 		log.Println("Error in create loan: ", err)
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (client *Client) LoanUpdate(loanId string, request *LoanUpdateRequest) (*LoanUpdateResponse, error) {
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId))
+	path := client.HostName.ResolveReference(tempPath).String()
+	var response *LoanUpdateResponse
+	if err := client.MakeRequest("PUT", path, request, &response); err != nil {
+		log.Println("Error in update loan: ", err)
 		return nil, err
 	}
 

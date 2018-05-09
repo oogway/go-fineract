@@ -8,7 +8,7 @@ type FineractError struct {
 }
 
 func (f *FineractError) Error() string {
-	return ""
+	return f.Code
 }
 
 const (
