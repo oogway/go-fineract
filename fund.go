@@ -151,11 +151,10 @@ func (client *Client) GetFundValue(fundId string, request *FundValueRequest) (*F
 }
 
 func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
-	tempPath, _ := url.Parse("fineract-provider/api/v1/savingsaccounts")
+	tempPath, _ := url.Parse("fineract-provider/api/v1/savingsaccounts?fields=id,accountNo,clientId,clientName,summary&offset=0&limit=10")
 	var response *FundsResponse
 	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }

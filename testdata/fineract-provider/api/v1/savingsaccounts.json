@@ -1,0 +1,743 @@
+{
+  "totalFilteredRecords": 1272,
+  "pageItems": [
+    {
+      "id": 1,
+      "accountNo": "000000001",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 9,
+      "clientName": "Susan Wanjiru",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2018,
+        4,
+        30
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 148821,
+        "totalWithdrawals": 37545,
+        "totalInterestEarned": 11475.72,
+        "totalInterestPosted": 16699.8,
+        "accountBalance": 127975.8,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": -5224.08,
+        "lastInterestCalculationDate": [
+          2018,
+          5,
+          9
+        ],
+        "availableBalance": 127975.8
+      }
+    },
+    {
+      "id": 2,
+      "accountNo": "000000002",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 5,
+      "clientName": "Harris P",
+      "fieldOfficerId": 2,
+      "fieldOfficerName": "M, Mary",
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2018,
+        3,
+        20
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 1016599,
+        "totalWithdrawals": 2155,
+        "totalInterestEarned": 56494.24,
+        "totalInterestPosted": 55005.15,
+        "accountBalance": 1069449.15,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": 1489.09,
+        "lastInterestCalculationDate": [
+          2018,
+          5,
+          9
+        ],
+        "availableBalance": 1069449.15
+      }
+    },
+    {
+      "id": 3,
+      "accountNo": "000000003",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 6,
+      "clientName": "JANE E",
+      "fieldOfficerId": 66,
+      "fieldOfficerName": "Fredrick, Boniphace",
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        7,
+        27
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 105928.32,
+        "totalWithdrawals": 72495,
+        "totalInterestEarned": 2639.13,
+        "totalInterestPosted": 3672.25,
+        "accountBalance": 37105.57,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": -1033.12,
+        "lastInterestCalculationDate": [
+          2017,
+          11,
+          13
+        ],
+        "availableBalance": 37105.57
+      }
+    },
+    {
+      "id": 4,
+      "accountNo": "000000004",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 5,
+      "clientName": "Harris P",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        10,
+        18
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 1025000,
+        "totalWithdrawals": 200,
+        "totalInterestEarned": 57447.7,
+        "totalInterestPosted": 56290.57,
+        "accountBalance": 1081090.57,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": 1157.13,
+        "lastInterestCalculationDate": [
+          2018,
+          5,
+          9
+        ],
+        "availableBalance": 1080890.57
+      }
+    },
+    {
+      "id": 5,
+      "accountNo": "000000005",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 2,
+      "clientName": "Johnson D",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        3,
+        20
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 1030,
+        "totalInterestEarned": 116.06,
+        "totalInterestPosted": 98.85,
+        "accountBalance": 1128.85,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": 17.21,
+        "lastInterestCalculationDate": [
+          2017,
+          11,
+          16
+        ],
+        "availableBalance": 1128.85
+      }
+    },
+    {
+      "id": 6,
+      "accountNo": "000000006",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 2,
+      "clientName": "Johnson D",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        3,
+        6
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 14166,
+        "totalInterestEarned": 1603.93,
+        "totalInterestPosted": 1372.5,
+        "accountBalance": 15538.5,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": 231.43,
+        "lastInterestCalculationDate": [
+          2017,
+          11,
+          16
+        ],
+        "availableBalance": 15538.5
+      }
+    },
+    {
+      "id": 10,
+      "accountNo": "000000010",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 7,
+      "clientName": "Kristy A Perrotti",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        2,
+        14
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 1000,
+        "totalInterestEarned": 88.25,
+        "totalInterestPosted": 157.11,
+        "accountBalance": 1157.11,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": -68.86,
+        "lastInterestCalculationDate": [
+          2018,
+          1,
+          4
+        ],
+        "availableBalance": 1157.11
+      }
+    },
+    {
+      "id": 11,
+      "accountNo": "000000011",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 11,
+      "clientName": "Pierre Bowrin",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          28
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        7,
+        23
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 11600,
+        "totalWithdrawals": 123,
+        "totalInterestEarned": 1205.65,
+        "totalInterestPosted": 1756.43,
+        "accountBalance": 13233.43,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": -550.78,
+        "lastInterestCalculationDate": [
+          2018,
+          5,
+          9
+        ],
+        "availableBalance": 13233.43
+      }
+    },
+    {
+      "id": 12,
+      "accountNo": "000000012",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 18,
+      "clientName": "Client 3",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          8,
+          1
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          8,
+          1
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2016,
+        8,
+        1
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 1000,
+        "totalInterestEarned": 183.39,
+        "totalInterestPosted": 306.92,
+        "accountBalance": 1306.92,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": -123.53,
+        "lastInterestCalculationDate": [
+          2018,
+          5,
+          9
+        ],
+        "availableBalance": 1306.92
+      }
+    },
+    {
+      "id": 13,
+      "accountNo": "000000013",
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      },
+      "clientId": 22,
+      "clientName": "Joe Hard",
+      "fieldOfficerId": 0,
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2016,
+          9,
+          30
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2016,
+          9,
+          30
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "interestPostingPeriodType": {
+        "id": 4,
+        "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+        "value": "Monthly"
+      },
+      "allowOverdraft": false,
+      "enforceMinRequiredBalance": false,
+      "withHoldTax": false,
+      "lastActiveTransactionDate": [
+        2017,
+        5,
+        28
+      ],
+      "isDormancyTrackingActive": false,
+      "summary": {
+        "totalDeposits": 97652.69,
+        "totalWithdrawals": 12700,
+        "totalInterestEarned": 9856.34,
+        "totalInterestPosted": 14191.95,
+        "accountBalance": 99144.64,
+        "totalOverdraftInterestDerived": 0,
+        "interestNotPosted": -4335.61,
+        "lastInterestCalculationDate": [
+          2018,
+          5,
+          9
+        ],
+        "availableBalance": 99144.64
+      }
+    }
+  ]
+}
