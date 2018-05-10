@@ -61,8 +61,8 @@ type InterestType struct {
 
 type GetLoanProductResponse struct {
 	Term               float64
-	RepaymentFrequency float64      `json:"repaymentEvery"`
 	Id                 float64      `json:"Id"`
+	RepaymentFrequency float64      `json:"repaymentEvery"`
 	InstallmentsCount  float64      `json:"numberOfRepayments"`
 	Type               InterestType `json:"interestType"`
 	InterestRate       float64      `json:"interestRatePerPeriod"`
