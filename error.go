@@ -31,6 +31,8 @@ const (
 
 	// ErrAuthenticationFailure is the code returned when there is a athentication failure
 	ErrAuthenticationFailure = "AuthenticationFailure"
+
+	ErrForbidden = "Forbidden"
 )
 
 func GetFineractStatusCode(code int) string {
@@ -39,6 +41,8 @@ func GetFineractStatusCode(code int) string {
 		return ErrBadRequest
 	case 401:
 		return ErrAuthenticationFailure
+	case 403:
+		return ErrForbidden
 	case 404:
 		return ErrNotFound
 	case 500:

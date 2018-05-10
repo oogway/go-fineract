@@ -56,12 +56,14 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	body, _ := ioutil.ReadAll(resp.Body)
 	log.Println(string(body))
 	log.Println(resp.StatusCode)
+	log.Println("------------------")
 	if resp.StatusCode != 200 {
 		rawMessage := json.RawMessage(body)
 		return &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
 	}
 
 	if err = json.Unmarshal(body, &response); err != nil {
+		log.Println(err)
 		rawMessage := json.RawMessage([]byte(err.Error()))
 		return &FineractError{ErrCodeSerialization, &rawMessage}
 	}
