@@ -1,6 +1,7 @@
 package fineract
 
 import (
+	"crypto/tls"
 	"log"
 	"net/http"
 	"net/url"
@@ -12,7 +13,8 @@ type Transporter interface {
 }
 
 type FineractOption struct {
-	Transport Transporter
+	Transport  Transporter
+	SkipVerify bool
 }
 
 type Client struct {
@@ -33,8 +35,15 @@ func NewClient(hostName, userName, password string, option FineractOption) (*Cli
 	}
 	once.Do(func() {
 		if option.Transport == nil {
-			option.Transport = &http.Client{}
+			httpClient := http.Client{}
+			if option.SkipVerify == true {
+				httpClient.Transport = &http.Transport{
+					TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+				}
+			}
+			option.Transport = &httpClient
 		}
+
 		client = Client{
 			HostName: host,
 			UserName: userName,
