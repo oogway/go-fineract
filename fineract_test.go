@@ -62,6 +62,22 @@ func TestFundIncrement(t *testing.T) {
 	})
 }
 
+func TestGetFunds(t *testing.T) {
+	t.Run("Should retrieve list of fund(s)", func(t *testing.T) {
+		client, err := NewClient("https://demo.openmf.org", "mifos", "password", FineractOption{
+			Transport: &MockTransport{DirectoryPath: "testdata"},
+		})
+		if err != nil {
+			t.Fatalf("Cannot create new client: %v", err)
+		}
+
+		req := FundsRequest{}
+		if _, err = client.GetFunds(&req); err != nil {
+			t.Fatalf("retrieve list of fund(s): %v", err)
+		}
+	})
+}
+
 func TestDecrementIncrement(t *testing.T) {
 	t.Run("Should decrement fund", func(t *testing.T) {
 		client, err := NewClient("https://demo.openmf.org", "mifos", "password", FineractOption{
