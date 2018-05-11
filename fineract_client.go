@@ -44,3 +44,9 @@ func NewClient(hostName, userName, password string, option FineractOption) (*Cli
 	})
 	return &client, err
 }
+
+func NewMockClient() {
+	return NewClient("https://demo.openmf.org", "mifos", "password", fineract.FineractOption{
+		Transport: &fineract.MockTransport{DirectoryPath: "../testdata"},
+	})
+}
