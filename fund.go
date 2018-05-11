@@ -17,11 +17,11 @@ var (
 )
 
 type FundIncrementRequest struct {
-	Locale            string `json:"locale"`
-	DateFormat        string `json:"dateFormat"`
-	TransactionDate   string `json:"transactionDate"`
-	TransactionAmount string `json:"transactionAmount"`
-	PaymentTypeId     string `json:"paymentTypeId"`
+	Locale            string 		`json:"locale"`
+	DateFormat        string 		`json:"dateFormat"`
+	TransactionDate   string 		`json:"transactionDate"`
+	TransactionAmount float64		`json:"transactionAmount"`
+	PaymentTypeId     string 		`json:"paymentTypeId"`
 }
 
 type FundIncrementResponse struct {
@@ -34,7 +34,7 @@ type FundDecrementRequest struct {
 	Locale            string `json:"locale"`
 	DateFormat        string `json:"dateFormat"`
 	TransactionDate   string `json:"transactionDate"`
-	TransactionAmount string `json:"transactionAmount"`
+	TransactionAmount float64 `json:"transactionAmount"`
 	PaymentTypeId     string `json:"paymentTypeId"`
 }
 
