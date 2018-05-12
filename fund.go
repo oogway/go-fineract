@@ -33,6 +33,18 @@ type FundDecrementResponse struct {
 	ResourceId float64 `json:"resourceId"`
 }
 
+type GetPaymentTypeRequest struct{}
+
+type GetPaymentTypeResponse struct {
+	PaymentMethod []PaymentType
+}
+
+type PaymentType struct {
+	Id				uint32	`json:"id"`
+	Name			string		`json:"name"`
+	IsCashPayment	bool		`json:"isCashPayment"`
+}
+
 type FundValueRequest struct{}
 
 type Summary struct {
@@ -92,4 +104,13 @@ func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
 		return nil, err
 	}
 	return response, nil
+}
+
+func (client *Client) GetPaymentType(request *GetPaymentTypeRequest) (*GetPaymentTypeResponse, error) {
+	tempPath, _ := url.Parse("fineract-provider/api/v1/paymenttypes")
+	var response = []PaymentType{}
+	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
+		return nil, err
+	}
+	return &GetPaymentTypeResponse{response}, nil
 }
