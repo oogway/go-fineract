@@ -93,3 +93,19 @@ func TestDecrementIncrement(t *testing.T) {
 		}
 	})
 }
+
+func TestGetPaymentType(t *testing.T) {
+	t.Run("Should retrieve payment types", func(t *testing.T) {
+		client, err := NewClient("https://demo.openmf.org", "mifos", "password", FineractOption{
+			Transport: &MockTransport{DirectoryPath: "testdata"},
+		})
+		if err != nil {
+			t.Fatalf("Connect failed, could not retrieve payment types: %v", err)
+		}
+
+		req := GetPaymentTypeRequest{}
+		if _, err = client.GetPaymentType(&req); err != nil {
+			t.Fatalf("Cannot retrieve payment type: %v", err)
+		}
+	})
+}

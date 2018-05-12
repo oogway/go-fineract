@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "online",
+    "description": "online payment type",
+    "isCashPayment": false,
+    "position": 55
+  }
+]
