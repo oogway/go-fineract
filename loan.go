@@ -68,6 +68,12 @@ type GetLoanProductResponse struct {
 	InterestRate       float64      `json:"interestRatePerPeriod"`
 }
 
+type GetLoanProductsRequest struct{}
+
+type GetLoanProductsResponse struct {
+	LoanProducts []GetLoanProductResponse
+}
+
 type GetLoanRequest struct{}
 
 type GetLoanResponse struct {
@@ -233,4 +239,16 @@ func (client *Client) LoanCalculateSchedule(request *LoanCalculateScheduleReques
 	}
 
 	return response, nil
+}
+
+func (client *Client) GetLoanProducts(request *GetLoanProductsRequest) (*GetLoanProductsResponse, error) {
+	tempPath, _ := url.Parse("fineract-provider/api/v1/loanproducts")
+	path := client.HostName.ResolveReference(tempPath).String()
+	var response []GetLoanProductResponse
+	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
+		log.Println("Error in geting the loan products: ", err)
+		return nil, err
+	}
+
+	return &GetLoanProductsResponse{LoanProducts: response}, nil
 }
