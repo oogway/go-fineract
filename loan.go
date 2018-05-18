@@ -18,12 +18,12 @@ type LoanCreateRequest struct {
 	Type                          string `json:"loanType"`
 	InstallmentsCount             string `json:"numberOfRepayments"`
 	RepaymentFrequency            string `json:"repaymentEvery"`
-	RepaymentFrequencyType        string `json:"repaymentFrequencyType"`
+	RepaymentFrequencyType        uint64 `json:"repaymentFrequencyType"`
 	InterestRatePerPeriod         string `json:"interestRatePerPeriod"`
-	AmortizationType              string `json:"amortizationType"`
+	AmortizationType              uint64 `json:"amortizationType"`
 	InterestType                  string `json:"interestType"`
-	InterestCalculationPeriodType string `json:"interestCalculationPeriodType"`
-	TransactionProcessingStrategy string `json:"transactionProcessingStrategyId"`
+	InterestCalculationPeriodType uint64 `json:"interestCalculationPeriodType"`
+	TransactionProcessingStrategy uint64 `json:"transactionProcessingStrategyId"`
 	ExpectedDisbursementDate      string `json:"expectedDisbursementDate"`
 	SubmittedOnDate               string `json:"submittedOnDate"`
 	LinkAccountId                 string `json:"linkAccountId"`
