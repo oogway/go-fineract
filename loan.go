@@ -27,6 +27,8 @@ type LoanCreateRequest struct {
 	ExpectedDisbursementDate      string `json:"expectedDisbursementDate"`
 	SubmittedOnDate               string `json:"submittedOnDate"`
 	LinkAccountId                 string `json:"linkAccountId"`
+	RepaymentsStartingFromDate    string `json:"repaymentsStartingFromDate,omitempty"`
+	InterestChargedFromDate       string `json:"interestChargedFromDate,omitempty"`
 }
 
 type LoanCreateResponse struct {
