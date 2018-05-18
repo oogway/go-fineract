@@ -12,6 +12,7 @@ const (
 	fineractHost     = "13.209.34.65:8443" //"https://demo.openmf.org"
 	fineractUser     = "mifos"
 	fineractPassword = "password"
+	baseURL          = "fineract-provider/api/v1/"
 )
 
 type Transporter interface {
@@ -64,4 +65,16 @@ func NewMockClient() (*Client, error) {
 	return NewClient("https://"+fineractHost, fineractUser, fineractPassword, FineractOption{
 		Transport: &MockTransport{DirectoryPath: "../testdata"},
 	})
+}
+
+func clientsURL() string {
+	return baseURL + "clients"
+}
+
+func paymenttypesURL() string {
+	return baseURL + "paymenttypes"
+}
+
+func savingsaccounts() string {
+	return baseURL + "savingsaccounts"
 }
