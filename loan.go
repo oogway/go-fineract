@@ -76,8 +76,15 @@ type GetLoanProductsResponse struct {
 
 type GetLoanRequest struct{}
 
+type Status struct {
+	Code                string `json:"code"`
+	Value               string `json:"Value"`
+	PendingApproval     bool   `json:"pendingApproval"`
+	WaitingForDisbursal bool   `json:"waitingForDisbursal"`
+}
+
 type GetLoanResponse struct {
-	Id                            float64 `json:"id"`
+	Id                            int64   `json:"id"`
 	ExternalId                    string  `json:"externalId"`
 	ClientId                      float64 `json:"clientId"`
 	EMIId                         float64 `json:"loanProductId"`
@@ -87,6 +94,15 @@ type GetLoanResponse struct {
 	RepaymentFrequency            float64 `json:"repaymentEvery"`
 	InterestRatePerPeriod         float64 `json:"interestRatePerPeriod"`
 	TransactionProcessingStrategy float64 `json:"transactionProcessingStrategyId"`
+	Lstatus                       Status  `json:"status"`
+}
+
+type GetAllLoanRequest struct {
+	ClientId int64
+}
+
+type GetAllLoanResponse struct {
+	Loans []GetLoanResponse `json:"pageItems"`
 }
 
 type LoanConfirmRequest struct {
@@ -203,6 +219,26 @@ func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanR
 	}
 
 	return response, nil
+}
+
+func (client *Client) GetAllLoan(request *GetAllLoanRequest) (*GetAllLoanResponse, error) {
+	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
+	path := client.HostName.ResolveReference(tempPath).String()
+	var response *GetAllLoanResponse
+	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
+		log.Println("Error in geting the loan: ", err)
+		return nil, err
+	}
+
+	var clientLoans []GetLoanResponse
+	for _, loan := range response.Loans {
+		if loan.ClientId == float64(request.ClientId) {
+			clientLoans = append(clientLoans, loan)
+		}
+	}
+	return &GetAllLoanResponse{
+		Loans: clientLoans,
+	}, nil
 }
 
 func (client *Client) LoanConfirm(loanId string, request *LoanConfirmRequest) (*LoanConfirmResponse, error) {
