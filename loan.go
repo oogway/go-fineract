@@ -215,7 +215,7 @@ func (client *Client) GetLoanProduct(loanProductId string, request *GetLoanProdu
 }
 
 func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanResponse, error) {
-	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId))
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId) + "?associations=repaymentSchedule")
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *GetLoanResponse
 	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
