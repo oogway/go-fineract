@@ -1,0 +1,29 @@
+{
+  "totalFilteredRecords": 2,
+  "pageItems": [
+    {
+      "id": 124,
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "subStatus": {
+        "mandatory": false
+      },
+      "fullname": "TS-TOKO Fund1"
+    },
+    {
+      "id": 144,
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "subStatus": {
+        "mandatory": false
+      },
+      "fullname": "TS-TOKO Fund 1"
+    }
+  ]
+}
