@@ -18,15 +18,17 @@ type LoanCreateRequest struct {
 	Type                          string `json:"loanType"`
 	InstallmentsCount             string `json:"numberOfRepayments"`
 	RepaymentFrequency            string `json:"repaymentEvery"`
-	RepaymentFrequencyType        string `json:"repaymentFrequencyType"`
+	RepaymentFrequencyType        uint64 `json:"repaymentFrequencyType"`
 	InterestRatePerPeriod         string `json:"interestRatePerPeriod"`
-	AmortizationType              string `json:"amortizationType"`
+	AmortizationType              uint64 `json:"amortizationType"`
 	InterestType                  string `json:"interestType"`
-	InterestCalculationPeriodType string `json:"interestCalculationPeriodType"`
-	TransactionProcessingStrategy string `json:"transactionProcessingStrategyId"`
+	InterestCalculationPeriodType uint64 `json:"interestCalculationPeriodType"`
+	TransactionProcessingStrategy uint64 `json:"transactionProcessingStrategyId"`
 	ExpectedDisbursementDate      string `json:"expectedDisbursementDate"`
 	SubmittedOnDate               string `json:"submittedOnDate"`
 	LinkAccountId                 string `json:"linkAccountId"`
+	RepaymentsStartingFromDate    string `json:"repaymentsStartingFromDate,omitempty"`
+	InterestChargedFromDate       string `json:"interestChargedFromDate,omitempty"`
 }
 
 type LoanCreateResponse struct {
@@ -122,24 +124,27 @@ type LoanDisburseRequest struct {
 type LoanDisburseResponse struct{}
 
 type LoanCalculateScheduleRequest struct {
-	Locale                          string  `json:"locale"`
-	DateFormat                      string  `json:"dateFormat"`
-	LoanAmount                      string  `json:"principal,omitempty"`
-	ProductId                       string  `json:"productId,omitempty"`
-	ClientId                        string  `json:"clientId,omitempty"`
-	LoanTermFrequency               uint64  `json:"loanTermFrequency,omitempty"`
-	LoanTermFrequencyType           float64 `json:"loanTermFrequencyType,omitempty"`
-	NumberOfRepayments              uint64  `json:"numberOfRepayments,omitempty"`
-	RepaymentEvery                  uint64  `json:"repaymentEvery,omitempty"`
-	RepaymentFrequencyType          uint64  `json:"repaymentFrequencyType,omitempty"`
-	AmortizationType                uint64  `json:"amortizationType,omitempty"`
-	InterestRatePerPeriod           float64 `json:"interestRatePerPeriod"`
-	InterestType                    float64 `json:"interestType"`
-	InterestCalculationPeriodType   uint64  `json:"interestCalculationPeriodType,omitempty"`
-	ExpectedDisbursementDate        string  `json:"expectedDisbursementDate,omitempty"`
-	SubmittedOnDate                 string  `json:"submittedOnDate,omitempty"`
-	TransactionProcessingStrategyId uint64  `json:"transactionProcessingStrategyId,omitempty"`
-	LoanType                        string  `json:"loanType,omitempty"`
+	Locale                                string  `json:"locale"`
+	DateFormat                            string  `json:"dateFormat"`
+	LoanAmount                            string  `json:"principal,omitempty"`
+	ProductId                             string  `json:"productId,omitempty"`
+	ClientId                              string  `json:"clientId,omitempty"`
+	LoanTermFrequency                     uint64  `json:"loanTermFrequency,omitempty"`
+	LoanTermFrequencyType                 float64 `json:"loanTermFrequencyType,omitempty"`
+	NumberOfRepayments                    uint64  `json:"numberOfRepayments,omitempty"`
+	RepaymentEvery                        uint64  `json:"repaymentEvery,omitempty"`
+	RepaymentFrequencyType                uint64  `json:"repaymentFrequencyType,omitempty"`
+	AmortizationType                      uint64  `json:"amortizationType,omitempty"`
+	InterestRatePerPeriod                 float64 `json:"interestRatePerPeriod"`
+	InterestType                          float64 `json:"interestType"`
+	InterestCalculationPeriodType         uint64  `json:"interestCalculationPeriodType,omitempty"`
+	ExpectedDisbursementDate              string  `json:"expectedDisbursementDate,omitempty"`
+	SubmittedOnDate                       string  `json:"submittedOnDate,omitempty"`
+	TransactionProcessingStrategyId       uint64  `json:"transactionProcessingStrategyId,omitempty"`
+	LoanType                              string  `json:"loanType,omitempty"`
+	AllowPartialPeriodInterestCalcualtion bool    `json:"allowPartialPeriodInterestCalcualtion,omitempty"`
+	RepaymentsStartingFromDate            string  `json:"repaymentsStartingFromDate,omitempty"`
+	InterestChargedFromDate               string  `json:"interestChargedFromDate,omitempty"`
 }
 
 type LoanPeriod struct {
@@ -210,7 +215,7 @@ func (client *Client) GetLoanProduct(loanProductId string, request *GetLoanProdu
 }
 
 func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanResponse, error) {
-	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId))
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId) + "?associations=repaymentSchedule")
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *GetLoanResponse
 	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
