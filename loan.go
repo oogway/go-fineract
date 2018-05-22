@@ -159,27 +159,27 @@ type LoanCalculateScheduleRequest struct {
 }
 
 type LoanPeriod struct {
-	Period                          uint64  `json:"period,omitempty"`
-	FromDate                        []uint  `json:"fromDate,omitempty"`
-	DueDate                         []uint  `json:"dueDate,omitempty"`
-	PrincipalDisbursed              float64 `json:"principalDisbursed,omitempty"`
-	PrincipalLoanBalanceOutstanding float64 `json:"principalLoanBalanceOutstanding,omitempty"`
-	FeeChargesOutstanding           float64 `json:"feeChargesOutstanding,omitempty"`
-	DaysInPeriod                    uint64  `json:"daysInPeriod,omitempty"`
-	PrincipalOriginalDue            float64 `json:"principalOriginalDue,omitempty"`
-	PrincipalDue                    float64 `json:"principalDue,omitempty"`
-	PrincipalOutstanding            float64 `json:"principalOutstanding,omitempty"`
-	InterestOriginalDue             float64 `json:"interestOriginalDue,omitempty"`
-	InterestDue                     float64 `json:"interestDue,omitempty"`
-	InterestOutstanding             float64 `json:"interestOutstanding,omitempty"`
-	FeeChargesDue                   float64 `json:"feeChargesDue,omitempty"`
-	PenaltyChargesDue               float64 `json:"penaltyChargesDue,omitempty"`
-	TotalOriginalDueForPeriod       float64 `json:"totalOriginalDueForPeriod,omitempty"`
-	TotalDueForPeriod               float64 `json:"totalDueForPeriod,omitempty"`
-	TotalPaidForPeriod              float64 `json:"totalPaidForPeriod,omitempty"`
-	TotalOutstandingForPeriod       float64 `json:"totalOutstandingForPeriod,omitempty"`
-	TotalActualCostOfLoanForPeriod  float64 `json:"totalActualCostOfLoanForPeriod,omitempty"`
-	TotalInstallmentAmountForPeriod float64 `json:"totalInstallmentAmountForPeriod,omitempty"`
+	Period                          uint64   `json:"period,omitempty"`
+	FromDate                        []uint32 `json:"fromDate,omitempty"`
+	DueDate                         []uint32 `json:"dueDate,omitempty"`
+	PrincipalDisbursed              float64  `json:"principalDisbursed,omitempty"`
+	PrincipalLoanBalanceOutstanding float64  `json:"principalLoanBalanceOutstanding,omitempty"`
+	FeeChargesOutstanding           float64  `json:"feeChargesOutstanding,omitempty"`
+	DaysInPeriod                    uint64   `json:"daysInPeriod,omitempty"`
+	PrincipalOriginalDue            float64  `json:"principalOriginalDue,omitempty"`
+	PrincipalDue                    float64  `json:"principalDue,omitempty"`
+	PrincipalOutstanding            float64  `json:"principalOutstanding,omitempty"`
+	InterestOriginalDue             float64  `json:"interestOriginalDue,omitempty"`
+	InterestDue                     float64  `json:"interestDue,omitempty"`
+	InterestOutstanding             float64  `json:"interestOutstanding,omitempty"`
+	FeeChargesDue                   float64  `json:"feeChargesDue,omitempty"`
+	PenaltyChargesDue               float64  `json:"penaltyChargesDue,omitempty"`
+	TotalOriginalDueForPeriod       float64  `json:"totalOriginalDueForPeriod,omitempty"`
+	TotalDueForPeriod               float64  `json:"totalDueForPeriod,omitempty"`
+	TotalPaidForPeriod              float64  `json:"totalPaidForPeriod,omitempty"`
+	TotalOutstandingForPeriod       float64  `json:"totalOutstandingForPeriod,omitempty"`
+	TotalActualCostOfLoanForPeriod  float64  `json:"totalActualCostOfLoanForPeriod,omitempty"`
+	TotalInstallmentAmountForPeriod float64  `json:"totalInstallmentAmountForPeriod,omitempty"`
 }
 
 type LoanCalculateScheduleResponse struct {
