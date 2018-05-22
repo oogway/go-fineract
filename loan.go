@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/url"
 	"path"
+	"strconv"
 )
 
 type LoanCreateRequest struct {
@@ -85,18 +86,28 @@ type Status struct {
 	WaitingForDisbursal bool   `json:"waitingForDisbursal"`
 }
 
+type RepaymentSchedule struct {
+	TotalPrincipalDisbursed float64       `json:"totalPrincipalDisbursed,omitempty"`
+	TotalPrincipalPaid      float64       `json:"totalPrincipalPaid,omitempty"`
+	TotalRepaymentExpected  float64       `json:"totalRepaymentExpected,omitempty"`
+	TotalRepayment          float64       `json:"totalRepayment,omitempty"`
+	TotalOutstanding        float64       `json:"totalOutstanding,omitempty"`
+	Periods                 []*LoanPeriod `json:"periods,omitempty"`
+}
+
 type GetLoanResponse struct {
-	Id                            int64   `json:"id"`
-	ExternalId                    string  `json:"externalId"`
-	ClientId                      float64 `json:"clientId"`
-	EMIId                         float64 `json:"loanProductId"`
-	Principal                     float64 `json:"principal"`
-	Term                          float64 `json:"termFrequency"`
-	InstallmentsCount             float64 `json:"numberOfRepayments"`
-	RepaymentFrequency            float64 `json:"repaymentEvery"`
-	InterestRatePerPeriod         float64 `json:"interestRatePerPeriod"`
-	TransactionProcessingStrategy float64 `json:"transactionProcessingStrategyId"`
-	Lstatus                       Status  `json:"status"`
+	Id                            int64             `json:"id"`
+	ExternalId                    string            `json:"externalId"`
+	ClientId                      float64           `json:"clientId"`
+	EMIId                         float64           `json:"loanProductId"`
+	Principal                     float64           `json:"principal"`
+	Term                          float64           `json:"termFrequency"`
+	InstallmentsCount             float64           `json:"numberOfRepayments"`
+	RepaymentFrequency            float64           `json:"repaymentEvery"`
+	InterestRatePerPeriod         float64           `json:"interestRatePerPeriod"`
+	TransactionProcessingStrategy float64           `json:"transactionProcessingStrategyId"`
+	Lstatus                       Status            `json:"status"`
+	RepaymentSchedule             RepaymentSchedule `json:"repaymentSchedule"`
 }
 
 type GetAllLoanRequest struct {
@@ -104,7 +115,7 @@ type GetAllLoanRequest struct {
 }
 
 type GetAllLoanResponse struct {
-	Loans []GetLoanResponse `json:"pageItems"`
+	Loans []GetLoanResponse `json:"loanAccounts"`
 }
 
 type LoanConfirmRequest struct {
@@ -227,23 +238,16 @@ func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanR
 }
 
 func (client *Client) GetAllLoan(request *GetAllLoanRequest) (*GetAllLoanResponse, error) {
-	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
+	clientId := strconv.FormatInt(request.ClientId, 10)
+	tempPath, _ := url.Parse(path.Join(path.Join("fineract-provider/api/v1/clients", clientId), "accounts?fields=loanAccounts"))
 	path := client.HostName.ResolveReference(tempPath).String()
-	var response *GetAllLoanResponse
+	var response GetAllLoanResponse
 	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
 		log.Println("Error in geting the loan: ", err)
 		return nil, err
 	}
 
-	var clientLoans []GetLoanResponse
-	for _, loan := range response.Loans {
-		if loan.ClientId == float64(request.ClientId) {
-			clientLoans = append(clientLoans, loan)
-		}
-	}
-	return &GetAllLoanResponse{
-		Loans: clientLoans,
-	}, nil
+	return &response, nil
 }
 
 func (client *Client) LoanConfirm(loanId string, request *LoanConfirmRequest) (*LoanConfirmResponse, error) {
