@@ -16,9 +16,7 @@ var (
 
 func makeClient(mock bool) (*Client, error) {
 	if mock {
-		return NewClient("", "", "", FineractOption{
-			Transport: &MockTransport{DirectoryPath: "testdata"},
-		})
+		return NewMockClient(&MockTransport{DirectoryPath: "testdata"})
 	}
 	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{SkipVerify: true})
 }

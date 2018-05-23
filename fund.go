@@ -10,12 +10,9 @@ import (
 )
 
 const (
-	fineractHost     = "https://13.209.34.65:8443" //"https://demo.openmf.org"
-	fineractUser     = "mifos"
-	fineractPassword = "password"
-	baseURL          = "fineract-provider/api/v1"
-	Locale           = "en"
-	DateFormat       = "dd MMMM yyyy"
+	baseURL    = "fineract-provider/api/v1"
+	Locale     = "en"
+	DateFormat = "dd MMMM yyyy"
 
 	active   = "Active"
 	pgOffset = "0"
@@ -280,10 +277,4 @@ func savingsAccountsURL() string {
 
 func headOfficeURL() string {
 	return path.Join(baseURL, "offices")
-}
-
-func NewMockClient() (*Client, error) {
-	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{
-		Transport: &MockTransport{DirectoryPath: "../testdata"},
-	})
 }

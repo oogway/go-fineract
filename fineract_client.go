@@ -8,6 +8,12 @@ import (
 	"sync"
 )
 
+const (
+	fineractHost     = "https://13.209.34.65:8443" //"https://demo.openmf.org"
+	fineractUser     = "mifos"
+	fineractPassword = "password"
+)
+
 type Transporter interface {
 	Do(req *http.Request) (*http.Response, error)
 }
@@ -52,4 +58,13 @@ func NewClient(hostName, userName, password string, option FineractOption) (*Cli
 		}
 	})
 	return &client, err
+}
+
+func NewMockClient(mockTransport *MockTransport) (*Client, error) {
+	if mockTransport == nil {
+		mockTransport = &MockTransport{DirectoryPath: "../testdata"}
+	}
+	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{
+		Transport: mockTransport,
+	})
 }
