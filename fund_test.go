@@ -9,6 +9,7 @@ import (
 const (
 	LendingName = "TSFund"
 )
+
 var (
 	Lending string
 )
@@ -19,7 +20,7 @@ func makeClient(mock bool) (*Client, error) {
 			Transport: &MockTransport{DirectoryPath: "testdata"},
 		})
 	}
-	return NewClient("https://"+fineractHost, fineractUser, fineractPassword, FineractOption{SkipVerify: true})
+	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{SkipVerify: true})
 }
 
 func TestSuiteMock(t *testing.T) {
@@ -45,15 +46,14 @@ func TestSuite(t *testing.T) {
 	}
 
 	//retrieve fundType
-	id, err := client.GetFundType(&GetFundTypeRequest{Name:LendingName})
+	id, err := client.GetFundType(&GetFundTypeRequest{Name: LendingName})
 	if err != nil {
 		t.Fatalf("retrieve fund type: %v", err)
 	}
 	Lending = toString(id)
 
-
 	//retrieve fundID from GetFunds
-	req := FundsRequest{Type:Lending}
+	req := FundsRequest{Type: Lending}
 	resp, err := client.GetFunds(&req)
 	if err != nil {
 		t.Fatalf("retrieve list of fund(s): %v", err)
@@ -88,7 +88,7 @@ func Suite(t *testing.T, client *Client, fundId string) {
 	})
 
 	t.Run("TestGetFunds", func(t *testing.T) {
-		if resp, err := client.GetFunds(&FundsRequest{Type:Lending}); err != nil || resp.TotalFilteredRecords == 0 {
+		if resp, err := client.GetFunds(&FundsRequest{Type: Lending}); err != nil || resp.TotalFilteredRecords == 0 {
 			t.Fatalf("retrieve list of fund(s): %v", err)
 		}
 	})
