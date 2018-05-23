@@ -13,6 +13,8 @@ const (
 	fineractUser     = "mifos"
 	fineractPassword = "password"
 	baseURL          = "fineract-provider/api/v1/"
+	Locale           = "en"
+	DateFormat       = "dd MMMM yyyy"
 )
 
 type Transporter interface {
