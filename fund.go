@@ -14,21 +14,28 @@ const (
 	pgOffset = "0"
 	pgLimit  = "100"
 
-	Principal             = "Fund Principal"
-	Interest              = "Fund Interest"
-	HeadLending FundType  = "2" //default
-	HeadTS      FundType  = "3"
-	Deposit     AccountTx = "deposit"
-	Withdraw    AccountTx = "withdrawal"
+	Principal AccountType = "Fund Principal"
+	Interest  AccountType = "Fund Interest"
+	Deposit   AccountTx   = "deposit"
+	Withdraw  AccountTx   = "withdrawal"
 )
 
-type AccountTx string
+type AccountType string
 
-type FundType string
+func toString(a interface{}) string {
+	return fmt.Sprintf("%v", a)
+}
+
+type AccountTx string
 
 type FundAccountId struct {
 	PrincipalAccountId string
 	InterestAccountId  string
+}
+
+type Office struct {
+	Id   uint32 `json:"id"`
+	Name string `json:"externalId"`
 }
 
 type PaymentType struct {
@@ -92,12 +99,15 @@ type GetPaymentTypeResponse struct {
 	PaymentMethod []PaymentType
 }
 
+type GetFundTypeRequest struct {
+	Name string
+}
+
 type Fund struct {
 	Id      uint64  `json:"id"`
 	Name    string  `json:"fullname"`
 	Status  StatusT `json:"status"`
 	Balance float64
-	Limit   float64
 }
 
 type FundsRequest struct {
@@ -122,8 +132,8 @@ func (client *Client) TransactSavingsAccount(accountId string, txType AccountTx,
 		return &TxResponse{}, nil
 	}
 
-	command := "transactions?command=" + fmt.Sprintf("%v", txType)
-	tempPath, _ := url.Parse(path.Join(savingsaccounts(), path.Join(accountId, command)))
+	command := "transactions?command=" + toString(txType)
+	tempPath, _ := url.Parse(path.Join(savingsAccountsURL(), path.Join(accountId, command)))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *TxResponse
 	if err := client.MakeRequest("POST", path, request, &response); err != nil {
@@ -133,7 +143,7 @@ func (client *Client) TransactSavingsAccount(accountId string, txType AccountTx,
 }
 
 func (client *Client) GetAccount(accountId string) (*AccountDetails, error) {
-	tempPath, _ := url.Parse(path.Join(savingsaccounts(), accountId))
+	tempPath, _ := url.Parse(path.Join(savingsAccountsURL(), accountId))
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *AccountDetails
 	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
@@ -154,12 +164,27 @@ func (client *Client) GetFund(fundId string) (*Fund, error) {
 }
 
 func (client *Client) GetPaymentType(request *GetPaymentTypeRequest) (*GetPaymentTypeResponse, error) {
-	tempPath, _ := url.Parse(paymenttypesURL())
+	tempPath, _ := url.Parse(paymentTypesURL())
 	var response []PaymentType
 	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &response); err != nil {
 		return nil, err
 	}
 	return &GetPaymentTypeResponse{response}, nil
+}
+
+func (client *Client) GetFundType(request *GetFundTypeRequest) (uint32, error) {
+	tempPath, _ := url.Parse(headOfficeURL())
+	var office []Office
+	if err := client.MakeRequest("GET", client.HostName.ResolveReference(tempPath).String(), nil, &office); err != nil {
+		return 0, err
+	}
+
+	for _, cursor := range office {
+		if cursor.Name == request.Name {
+			return cursor.Id, nil
+		}
+	}
+	return 0, errors.New(fmt.Sprintf("No FundType with name %v found", request.Name))
 }
 
 func (client *Client) GetFundValue(fundId string) (float64, error) {
@@ -169,11 +194,11 @@ func (client *Client) GetFundValue(fundId string) (float64, error) {
 	}
 
 	for _, cursor := range response.FundAccount {
-		if cursor.ProductName == Principal && cursor.Status.Value == active {
+		if cursor.ProductName == toString(Principal) && cursor.Status.Value == active {
 			return cursor.AccountBalance, nil
 		}
 	}
-	return 0, errors.New("No active account of type " + Principal)
+	return 0, errors.New("No active account of type " + toString(Principal))
 }
 
 func (client *Client) GetFundAccounts(fundId string) (*FundAccountResponse, error) {
@@ -193,7 +218,7 @@ func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
 	}
 	for _, cursor := range fundsResponse.Fund {
 		if cursor.Status.Value == active {
-			balance, err := client.GetFundValue(fmt.Sprintf("%v", cursor.Id))
+			balance, err := client.GetFundValue(toString(cursor.Id))
 			if err == nil {
 				cursor.Balance = balance
 			}
@@ -212,11 +237,11 @@ func (client *Client) GetFundAccountId(fundId string) (*FundAccountId, error) {
 	fundAccountId := &FundAccountId{}
 
 	for _, cursor := range response.FundAccount {
-		if cursor.Status.Value == active && cursor.ProductName == Principal {
-			fundAccountId.PrincipalAccountId = fmt.Sprintf("%v", cursor.Id)
+		if cursor.Status.Value == active && cursor.ProductName == toString(Principal) {
+			fundAccountId.PrincipalAccountId = toString(cursor.Id)
 		}
-		if cursor.Status.Value == active && cursor.ProductName == Interest {
-			fundAccountId.InterestAccountId = fmt.Sprintf("%v", cursor.Id)
+		if cursor.Status.Value == active && cursor.ProductName == toString(Interest) {
+			fundAccountId.InterestAccountId = toString(cursor.Id)
 		}
 		if fundAccountId.PrincipalAccountId != "" && fundAccountId.InterestAccountId != "" {
 			break
@@ -230,9 +255,6 @@ func fundsURLParams(officeId string) string {
 	fieldFilter := "fields=id,status,fullname"
 	offset := "offset=" + pgOffset
 	limit := "limit=" + pgLimit
-	if officeId == "" {
-		officeId = fmt.Sprintf("%v", HeadLending)
-	}
 	office := "officeId=" + officeId
 	return "?" + office + "&" + fieldFilter + "&" + offset + "&" + limit
 }

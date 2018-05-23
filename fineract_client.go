@@ -71,10 +71,14 @@ func clientsURL() string {
 	return baseURL + "clients"
 }
 
-func paymenttypesURL() string {
+func paymentTypesURL() string {
 	return baseURL + "paymenttypes"
 }
 
-func savingsaccounts() string {
+func savingsAccountsURL() string {
 	return baseURL + "savingsaccounts"
+}
+
+func headOfficeURL() string {
+	return baseURL + "offices"
 }

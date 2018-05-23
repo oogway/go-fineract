@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+const (
+	LendingName = "TSFund"
+)
+var (
+	Lending string
+)
+
 func makeClient(mock bool) (*Client, error) {
 	if mock {
 		return NewClient("", "", "", FineractOption{
@@ -37,14 +44,22 @@ func TestSuite(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	//retrieve fundType
+	id, err := client.GetFundType(&GetFundTypeRequest{Name:LendingName})
+	if err != nil {
+		t.Fatalf("retrieve fund type: %v", err)
+	}
+	Lending = toString(id)
+
+
 	//retrieve fundID from GetFunds
-	req := FundsRequest{}
+	req := FundsRequest{Type:Lending}
 	resp, err := client.GetFunds(&req)
 	if err != nil {
 		t.Fatalf("retrieve list of fund(s): %v", err)
 	}
 	if len(resp.Fund) == 0 {
-		t.Fatalf("No fund retrieved, atleast one fund should exists")
+		t.Fatalf("no fund retrieved, atleast one fund should exists")
 	}
 	fundId := fmt.Sprintf("%v", resp.Fund[0].Id)
 
@@ -73,7 +88,7 @@ func Suite(t *testing.T, client *Client, fundId string) {
 	})
 
 	t.Run("TestGetFunds", func(t *testing.T) {
-		if resp, err := client.GetFunds(&FundsRequest{}); err != nil || resp.TotalFilteredRecords == 0 {
+		if resp, err := client.GetFunds(&FundsRequest{Type:Lending}); err != nil || resp.TotalFilteredRecords == 0 {
 			t.Fatalf("retrieve list of fund(s): %v", err)
 		}
 	})
@@ -127,7 +142,7 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 	}
 
 	for _, cursor := range response.FundAccount {
-		if cursor.ProductName == Principal && cursor.Status.Value == active {
+		if cursor.ProductName == toString(Principal) && cursor.Status.Value == active {
 			accountId = cursor.AccountNo
 			break
 		}
