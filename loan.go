@@ -181,6 +181,7 @@ type LoanPeriod struct {
 	TotalOutstandingForPeriod       float64  `json:"totalOutstandingForPeriod,omitempty"`
 	TotalActualCostOfLoanForPeriod  float64  `json:"totalActualCostOfLoanForPeriod,omitempty"`
 	TotalInstallmentAmountForPeriod float64  `json:"totalInstallmentAmountForPeriod,omitempty"`
+	Complete                        bool     `json:"complete,omitempty"`
 }
 
 type LoanCalculateScheduleResponse struct {
@@ -189,6 +190,17 @@ type LoanCalculateScheduleResponse struct {
 	LoanTermInDays         uint64        `json:"loanTermInDays,omitempty"`
 	Periods                []*LoanPeriod `json:"periods,omitempty"`
 }
+
+type LoanRepayRequest struct {
+	Locale            string  `json:"locale"`
+	DateFormat        string  `json:"dateFormat"`
+	TransactionDate   string  `json:"transactionDate"`
+	TransactionAmount float64 `json:"transactionAmount"`
+	PaymentTypeId     string  `json:"paymentTypeId"`
+	Note              string  `json:"note"`
+}
+
+type LoanRepayResponse struct{}
 
 func (client *Client) LoanCreate(request *LoanCreateRequest) (*LoanCreateResponse, error) {
 	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
@@ -297,4 +309,16 @@ func (client *Client) GetLoanProducts(request *GetLoanProductsRequest) (*GetLoan
 	}
 
 	return &GetLoanProductsResponse{LoanProducts: response}, nil
+}
+
+func (client *Client) LoanRepay(loanId string, request *LoanRepayRequest) (*LoanRepayResponse, error) {
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId, "transactions?command=repayment"))
+	path := client.HostName.ResolveReference(tempPath).String()
+	var response *LoanRepayResponse
+	if err := client.MakeRequest("POST", path, request, &response); err != nil {
+		log.Println("Error in repayment of loan: ", err)
+		return nil, err
+	}
+
+	return response, nil
 }
