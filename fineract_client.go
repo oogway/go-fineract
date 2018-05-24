@@ -9,12 +9,9 @@ import (
 )
 
 const (
-	fineractHost     = "13.209.34.65:8443" //"https://demo.openmf.org"
+	fineractHost     = "https://13.209.34.65:8443" //"https://demo.openmf.org"
 	fineractUser     = "mifos"
 	fineractPassword = "password"
-	baseURL          = "fineract-provider/api/v1/"
-	Locale           = "en"
-	DateFormat       = "dd MMMM yyyy"
 )
 
 type Transporter interface {
@@ -63,24 +60,11 @@ func NewClient(hostName, userName, password string, option FineractOption) (*Cli
 	return &client, err
 }
 
-func NewMockClient() (*Client, error) {
-	return NewClient("https://"+fineractHost, fineractUser, fineractPassword, FineractOption{
-		Transport: &MockTransport{DirectoryPath: "../testdata"},
+func NewMockClient(mockTransport *MockTransport) (*Client, error) {
+	if mockTransport == nil {
+		mockTransport = &MockTransport{DirectoryPath: "../testdata"}
+	}
+	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{
+		Transport: mockTransport,
 	})
-}
-
-func clientsURL() string {
-	return baseURL + "clients"
-}
-
-func paymentTypesURL() string {
-	return baseURL + "paymenttypes"
-}
-
-func savingsAccountsURL() string {
-	return baseURL + "savingsaccounts"
-}
-
-func headOfficeURL() string {
-	return baseURL + "offices"
 }

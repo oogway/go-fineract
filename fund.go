@@ -10,6 +10,10 @@ import (
 )
 
 const (
+	baseURL    = "fineract-provider/api/v1"
+	Locale     = "en"
+	DateFormat = "dd MMMM yyyy"
+
 	active   = "Active"
 	pgOffset = "0"
 	pgLimit  = "100"
@@ -257,4 +261,20 @@ func fundsURLParams(officeId string) string {
 	limit := "limit=" + pgLimit
 	office := "officeId=" + officeId
 	return "?" + office + "&" + fieldFilter + "&" + offset + "&" + limit
+}
+
+func clientsURL() string {
+	return path.Join(baseURL, "clients")
+}
+
+func paymentTypesURL() string {
+	return path.Join(baseURL, "paymenttypes")
+}
+
+func savingsAccountsURL() string {
+	return path.Join(baseURL, "savingsaccounts")
+}
+
+func headOfficeURL() string {
+	return path.Join(baseURL, "offices")
 }
