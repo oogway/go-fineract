@@ -53,12 +53,19 @@ type Summary struct {
 	TotalWithdrawals float64 `json:"totalWithdrawals"`
 }
 
+type Currency struct {
+	Code          string `json:"code"`
+	Name          string `json:"name"`
+	DisplaySymbol string `json:"displaySymbol"`
+}
+
 type FundValueResponse struct {
-	Id         int64   `json:"id"`
-	AccountNo  string  `json:"accountNo"`
-	ClientId   int64   `json:"clientId"`
-	ClientName string  `json:"clientName"`
-	Statement  Summary `json:"summary"`
+	Id         int64    `json:"id"`
+	AccountNo  string   `json:"accountNo"`
+	ClientId   int64    `json:"clientId"`
+	ClientName string   `json:"clientName"`
+	Statement  Summary  `json:"summary"`
+	Currency   Currency `json:"currency"`
 }
 
 type FundsRequest struct{}
