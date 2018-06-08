@@ -4,31 +4,33 @@ import (
 	"log"
 	"net/url"
 	"path"
+	"strconv"
 )
 
 type LoanCreateRequest struct {
-	Locale                        string `json:"locale"`
-	DateFormat                    string `json:"dateFormat"`
-	ExternalId                    string `json:"externalId"`
-	ClientId                      string `json:"clientId"`
-	EMIId                         string `json:"productId"`
-	LoanAmount                    string `json:"principal"`
-	Term                          string `json:"loanTermFrequency"`
-	TermFrequency                 string `json:"loanTermFrequencyType"`
-	Type                          string `json:"loanType"`
-	InstallmentsCount             string `json:"numberOfRepayments"`
-	RepaymentFrequency            string `json:"repaymentEvery"`
-	RepaymentFrequencyType        uint64 `json:"repaymentFrequencyType"`
-	InterestRatePerPeriod         string `json:"interestRatePerPeriod"`
-	AmortizationType              uint64 `json:"amortizationType"`
-	InterestType                  string `json:"interestType"`
-	InterestCalculationPeriodType uint64 `json:"interestCalculationPeriodType"`
-	TransactionProcessingStrategy uint64 `json:"transactionProcessingStrategyId"`
-	ExpectedDisbursementDate      string `json:"expectedDisbursementDate"`
-	SubmittedOnDate               string `json:"submittedOnDate"`
-	LinkAccountId                 string `json:"linkAccountId"`
-	RepaymentsStartingFromDate    string `json:"repaymentsStartingFromDate,omitempty"`
-	InterestChargedFromDate       string `json:"interestChargedFromDate,omitempty"`
+	Locale                                string `json:"locale"`
+	DateFormat                            string `json:"dateFormat"`
+	ExternalId                            string `json:"externalId"`
+	ClientId                              string `json:"clientId"`
+	EMIId                                 string `json:"productId"`
+	LoanAmount                            string `json:"principal"`
+	Term                                  string `json:"loanTermFrequency"`
+	TermFrequency                         string `json:"loanTermFrequencyType"`
+	Type                                  string `json:"loanType"`
+	InstallmentsCount                     string `json:"numberOfRepayments"`
+	RepaymentFrequency                    string `json:"repaymentEvery"`
+	RepaymentFrequencyType                uint64 `json:"repaymentFrequencyType"`
+	InterestRatePerPeriod                 string `json:"interestRatePerPeriod"`
+	AmortizationType                      uint64 `json:"amortizationType"`
+	InterestType                          string `json:"interestType"`
+	InterestCalculationPeriodType         uint64 `json:"interestCalculationPeriodType"`
+	TransactionProcessingStrategy         uint64 `json:"transactionProcessingStrategyId"`
+	ExpectedDisbursementDate              string `json:"expectedDisbursementDate"`
+	SubmittedOnDate                       string `json:"submittedOnDate"`
+	LinkAccountId                         string `json:"linkAccountId"`
+	RepaymentsStartingFromDate            string `json:"repaymentsStartingFromDate,omitempty"`
+	InterestChargedFromDate               string `json:"interestChargedFromDate,omitempty"`
+	AllowPartialPeriodInterestCalcualtion bool   `json:"allowPartialPeriodInterestCalcualtion,omitempty"`
 }
 
 type LoanCreateResponse struct {
@@ -85,18 +87,28 @@ type Status struct {
 	WaitingForDisbursal bool   `json:"waitingForDisbursal"`
 }
 
+type RepaymentSchedule struct {
+	TotalPrincipalDisbursed float64       `json:"totalPrincipalDisbursed,omitempty"`
+	TotalPrincipalPaid      float64       `json:"totalPrincipalPaid,omitempty"`
+	TotalRepaymentExpected  float64       `json:"totalRepaymentExpected,omitempty"`
+	TotalRepayment          float64       `json:"totalRepayment,omitempty"`
+	TotalOutstanding        float64       `json:"totalOutstanding,omitempty"`
+	Periods                 []*LoanPeriod `json:"periods,omitempty"`
+}
+
 type GetLoanResponse struct {
-	Id                            int64   `json:"id"`
-	ExternalId                    string  `json:"externalId"`
-	ClientId                      float64 `json:"clientId"`
-	EMIId                         float64 `json:"loanProductId"`
-	Principal                     float64 `json:"principal"`
-	Term                          float64 `json:"termFrequency"`
-	InstallmentsCount             float64 `json:"numberOfRepayments"`
-	RepaymentFrequency            float64 `json:"repaymentEvery"`
-	InterestRatePerPeriod         float64 `json:"interestRatePerPeriod"`
-	TransactionProcessingStrategy float64 `json:"transactionProcessingStrategyId"`
-	Lstatus                       Status  `json:"status"`
+	Id                            int64             `json:"id"`
+	ExternalId                    string            `json:"externalId"`
+	ClientId                      float64           `json:"clientId"`
+	EMIId                         float64           `json:"loanProductId"`
+	Principal                     float64           `json:"principal"`
+	Term                          float64           `json:"termFrequency"`
+	InstallmentsCount             float64           `json:"numberOfRepayments"`
+	RepaymentFrequency            float64           `json:"repaymentEvery"`
+	InterestRatePerPeriod         float64           `json:"interestRatePerPeriod"`
+	TransactionProcessingStrategy float64           `json:"transactionProcessingStrategyId"`
+	Lstatus                       Status            `json:"status"`
+	RepaymentSchedule             RepaymentSchedule `json:"repaymentSchedule"`
 }
 
 type GetAllLoanRequest struct {
@@ -104,7 +116,7 @@ type GetAllLoanRequest struct {
 }
 
 type GetAllLoanResponse struct {
-	Loans []GetLoanResponse `json:"pageItems"`
+	Loans []GetLoanResponse `json:"loanAccounts"`
 }
 
 type LoanConfirmRequest struct {
@@ -148,27 +160,28 @@ type LoanCalculateScheduleRequest struct {
 }
 
 type LoanPeriod struct {
-	Period                          uint64  `json:"period,omitempty"`
-	FromDate                        []uint  `json:"fromDate,omitempty"`
-	DueDate                         []uint  `json:"dueDate,omitempty"`
-	PrincipalDisbursed              float64 `json:"principalDisbursed,omitempty"`
-	PrincipalLoanBalanceOutstanding float64 `json:"principalLoanBalanceOutstanding,omitempty"`
-	FeeChargesOutstanding           float64 `json:"feeChargesOutstanding,omitempty"`
-	DaysInPeriod                    uint64  `json:"daysInPeriod,omitempty"`
-	PrincipalOriginalDue            float64 `json:"principalOriginalDue,omitempty"`
-	PrincipalDue                    float64 `json:"principalDue,omitempty"`
-	PrincipalOutstanding            float64 `json:"principalOutstanding,omitempty"`
-	InterestOriginalDue             float64 `json:"interestOriginalDue,omitempty"`
-	InterestDue                     float64 `json:"interestDue,omitempty"`
-	InterestOutstanding             float64 `json:"interestOutstanding,omitempty"`
-	FeeChargesDue                   float64 `json:"feeChargesDue,omitempty"`
-	PenaltyChargesDue               float64 `json:"penaltyChargesDue,omitempty"`
-	TotalOriginalDueForPeriod       float64 `json:"totalOriginalDueForPeriod,omitempty"`
-	TotalDueForPeriod               float64 `json:"totalDueForPeriod,omitempty"`
-	TotalPaidForPeriod              float64 `json:"totalPaidForPeriod,omitempty"`
-	TotalOutstandingForPeriod       float64 `json:"totalOutstandingForPeriod,omitempty"`
-	TotalActualCostOfLoanForPeriod  float64 `json:"totalActualCostOfLoanForPeriod,omitempty"`
-	TotalInstallmentAmountForPeriod float64 `json:"totalInstallmentAmountForPeriod,omitempty"`
+	Period                          uint64   `json:"period,omitempty"`
+	FromDate                        []uint32 `json:"fromDate,omitempty"`
+	DueDate                         []uint32 `json:"dueDate,omitempty"`
+	PrincipalDisbursed              float64  `json:"principalDisbursed,omitempty"`
+	PrincipalLoanBalanceOutstanding float64  `json:"principalLoanBalanceOutstanding,omitempty"`
+	FeeChargesOutstanding           float64  `json:"feeChargesOutstanding,omitempty"`
+	DaysInPeriod                    uint64   `json:"daysInPeriod,omitempty"`
+	PrincipalOriginalDue            float64  `json:"principalOriginalDue,omitempty"`
+	PrincipalDue                    float64  `json:"principalDue,omitempty"`
+	PrincipalOutstanding            float64  `json:"principalOutstanding,omitempty"`
+	InterestOriginalDue             float64  `json:"interestOriginalDue,omitempty"`
+	InterestDue                     float64  `json:"interestDue,omitempty"`
+	InterestOutstanding             float64  `json:"interestOutstanding,omitempty"`
+	FeeChargesDue                   float64  `json:"feeChargesDue,omitempty"`
+	PenaltyChargesDue               float64  `json:"penaltyChargesDue,omitempty"`
+	TotalOriginalDueForPeriod       float64  `json:"totalOriginalDueForPeriod,omitempty"`
+	TotalDueForPeriod               float64  `json:"totalDueForPeriod,omitempty"`
+	TotalPaidForPeriod              float64  `json:"totalPaidForPeriod,omitempty"`
+	TotalOutstandingForPeriod       float64  `json:"totalOutstandingForPeriod,omitempty"`
+	TotalActualCostOfLoanForPeriod  float64  `json:"totalActualCostOfLoanForPeriod,omitempty"`
+	TotalInstallmentAmountForPeriod float64  `json:"totalInstallmentAmountForPeriod,omitempty"`
+	Complete                        bool     `json:"complete,omitempty"`
 }
 
 type LoanCalculateScheduleResponse struct {
@@ -177,6 +190,17 @@ type LoanCalculateScheduleResponse struct {
 	LoanTermInDays         uint64        `json:"loanTermInDays,omitempty"`
 	Periods                []*LoanPeriod `json:"periods,omitempty"`
 }
+
+type LoanRepayRequest struct {
+	Locale            string  `json:"locale"`
+	DateFormat        string  `json:"dateFormat"`
+	TransactionDate   string  `json:"transactionDate"`
+	TransactionAmount float64 `json:"transactionAmount"`
+	PaymentTypeId     string  `json:"paymentTypeId"`
+	Note              string  `json:"note"`
+}
+
+type LoanRepayResponse struct{}
 
 func (client *Client) LoanCreate(request *LoanCreateRequest) (*LoanCreateResponse, error) {
 	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
@@ -227,23 +251,16 @@ func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanR
 }
 
 func (client *Client) GetAllLoan(request *GetAllLoanRequest) (*GetAllLoanResponse, error) {
-	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
+	clientId := strconv.FormatInt(request.ClientId, 10)
+	tempPath, _ := url.Parse(path.Join(path.Join("fineract-provider/api/v1/clients", clientId), "accounts?fields=loanAccounts"))
 	path := client.HostName.ResolveReference(tempPath).String()
-	var response *GetAllLoanResponse
+	var response GetAllLoanResponse
 	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
 		log.Println("Error in geting the loan: ", err)
 		return nil, err
 	}
 
-	var clientLoans []GetLoanResponse
-	for _, loan := range response.Loans {
-		if loan.ClientId == float64(request.ClientId) {
-			clientLoans = append(clientLoans, loan)
-		}
-	}
-	return &GetAllLoanResponse{
-		Loans: clientLoans,
-	}, nil
+	return &response, nil
 }
 
 func (client *Client) LoanConfirm(loanId string, request *LoanConfirmRequest) (*LoanConfirmResponse, error) {
@@ -292,4 +309,16 @@ func (client *Client) GetLoanProducts(request *GetLoanProductsRequest) (*GetLoan
 	}
 
 	return &GetLoanProductsResponse{LoanProducts: response}, nil
+}
+
+func (client *Client) LoanRepay(loanId string, request *LoanRepayRequest) (*LoanRepayResponse, error) {
+	tempPath, _ := url.Parse(path.Join("fineract-provider/api/v1/loans", loanId, "transactions?command=repayment"))
+	path := client.HostName.ResolveReference(tempPath).String()
+	var response *LoanRepayResponse
+	if err := client.MakeRequest("POST", path, request, &response); err != nil {
+		log.Println("Error in repayment of loan: ", err)
+		return nil, err
+	}
+
+	return response, nil
 }
