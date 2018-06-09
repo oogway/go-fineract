@@ -14,13 +14,6 @@ var (
 	Lending string
 )
 
-func makeClient(mock bool) (*Client, error) {
-	if mock {
-		return NewMockClient(&MockTransport{DirectoryPath: "testdata"})
-	}
-	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{SkipVerify: true})
-}
-
 func TestSuiteMock(t *testing.T) {
 	if !testing.Short() {
 		t.Skip("Skipped mock tests in long mode")
