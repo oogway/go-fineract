@@ -2,6 +2,7 @@ package fineract
 
 import (
 	"fmt"
+	"log"
 	"testing"
 )
 
@@ -13,7 +14,7 @@ func TestSuiteLoanMock(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	LoanSuite(t, client, "2")
+	LoanSuite(t, client, "12")
 }
 
 func TestSuiteLoan(t *testing.T) {
@@ -35,10 +36,14 @@ func TestSuiteLoan(t *testing.T) {
 
 func LoanSuite(t *testing.T, client *Client, loanProductId string) {
 
-	t.Run("TestGetLoanProduct", func(t *testing.T) {
-		_, err := client.GetLoanProduct(loanProductId, &GetLoanProductRequest{})
+	t.Run("TestGetLoanProduct with service charges", func(t *testing.T) {
+		resp, err := client.GetLoanProduct(loanProductId, &GetLoanProductRequest{})
 		if err != nil {
 			t.Fatalf("Cannot get the loan product: %v", err)
+		}
+		log.Println(resp)
+		if len(resp.Charges) == 0 {
+			t.Fatalf("No service charge found")
 		}
 	})
 }

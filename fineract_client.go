@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	fineractHost     = "https://10.10.8.47:8443" //"https://13.209.34.65:8443" //"https://demo.openmf.org"
+	fineractHost     = "https://10.10.8.47:8443"
 	fineractUser     = "mifos"
 	fineractPassword = "password"
 )

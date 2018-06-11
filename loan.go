@@ -31,7 +31,7 @@ type LoanCreateRequest struct {
 	RepaymentsStartingFromDate            string       `json:"repaymentsStartingFromDate,omitempty"`
 	InterestChargedFromDate               string       `json:"interestChargedFromDate,omitempty"`
 	AllowPartialPeriodInterestCalculation bool         `json:"allowPartialPeriodInterestCalcualtion,omitempty"`
-	Charge                                []LoanCharge `json:"charges"`
+	Charges                               []LoanCharge `json:"charges"`
 }
 
 type LoanCreateResponse struct {
@@ -71,7 +71,7 @@ type GetLoanProductResponse struct {
 	InstallmentsCount  float64      `json:"numberOfRepayments"`
 	Type               InterestType `json:"interestType"`
 	InterestRate       float64      `json:"interestRatePerPeriod"`
-	Charge             []Charge     `json:"charges"`
+	Charges            []Charge     `json:"charges"`
 }
 
 type Charge struct {
@@ -169,7 +169,7 @@ type LoanCalculateScheduleRequest struct {
 	AllowPartialPeriodInterestCalcualtion bool         `json:"allowPartialPeriodInterestCalcualtion,omitempty"`
 	RepaymentsStartingFromDate            string       `json:"repaymentsStartingFromDate,omitempty"`
 	InterestChargedFromDate               string       `json:"interestChargedFromDate,omitempty"`
-	Charge                                []LoanCharge `json:"charges"`
+	Charges                               []LoanCharge `json:"charges"`
 }
 
 type LoanPeriod struct {
@@ -186,7 +186,7 @@ type LoanPeriod struct {
 	InterestOriginalDue             float64  `json:"interestOriginalDue,omitempty"`
 	InterestDue                     float64  `json:"interestDue,omitempty"`
 	InterestOutstanding             float64  `json:"interestOutstanding,omitempty"`
-	FeeCharges                      float64  `json:"feeChargesDue,omitempty"`
+	FeeChargesDue                   float64  `json:"feeChargesDue,omitempty"`
 	PenaltyChargesDue               float64  `json:"penaltyChargesDue,omitempty"`
 	TotalOriginalDueForPeriod       float64  `json:"totalOriginalDueForPeriod,omitempty"`
 	TotalDueForPeriod               float64  `json:"totalDueForPeriod,omitempty"`
