@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	fineractHost     = "https://13.209.34.65:8443" //"https://demo.openmf.org"
+	fineractHost     = "https://10.10.8.47:8443"
 	fineractUser     = "mifos"
 	fineractPassword = "password"
 )
@@ -67,4 +67,11 @@ func NewMockClient(mockTransport *MockTransport) (*Client, error) {
 	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{
 		Transport: mockTransport,
 	})
+}
+
+func makeClient(mock bool) (*Client, error) {
+	if mock {
+		return NewMockClient(&MockTransport{DirectoryPath: "testdata"})
+	}
+	return NewClient(fineractHost, fineractUser, fineractPassword, FineractOption{SkipVerify: true})
 }

@@ -1,0 +1,180 @@
+{
+  "id": 2,
+  "name": "Three Months",
+  "shortName": "TM",
+  "description": "This loan is for three months",
+  "includeInBorrowerCycle": false,
+  "useBorrowerCycle": false,
+  "status": "loanProduct.active",
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimalPlaces": 2,
+    "inMultiplesOf": 0,
+    "displaySymbol": "$",
+    "nameCode": "currency.USD",
+    "displayLabel": "US Dollar ($)"
+  },
+  "principal": 10000,
+  "minPrincipal": 50,
+  "maxPrincipal": 10000,
+  "numberOfRepayments": 3,
+  "repaymentEvery": 1,
+  "repaymentFrequencyType": {
+    "id": 2,
+    "code": "repaymentFrequency.periodFrequencyType.months",
+    "value": "Months"
+  },
+  "interestRatePerPeriod": 4,
+  "interestRateFrequencyType": {
+    "id": 2,
+    "code": "interestRateFrequency.periodFrequencyType.months",
+    "value": "Per month"
+  },
+  "annualInterestRate": 48,
+  "isLinkedToFloatingInterestRates": false,
+  "isFloatingInterestRateCalculationAllowed": false,
+  "allowVariableInstallments": false,
+  "minimumGap": 0,
+  "maximumGap": 0,
+  "amortizationType": {
+    "id": 1,
+    "code": "amortizationType.equal.installments",
+    "value": "Equal installments"
+  },
+  "interestType": {
+    "id": 1,
+    "code": "interestType.flat",
+    "value": "Flat"
+  },
+  "interestCalculationPeriodType": {
+    "id": 1,
+    "code": "interestCalculationPeriodType.same.as.repayment.period",
+    "value": "Same as repayment period"
+  },
+  "allowPartialPeriodInterestCalcualtion": false,
+  "transactionProcessingStrategyId": 1,
+  "transactionProcessingStrategyName": "Penalties, Fees, Interest, Principal order",
+  "daysInMonthType": {
+    "id": 1,
+    "code": "DaysInMonthType.actual",
+    "value": "Actual"
+  },
+  "daysInYearType": {
+    "id": 1,
+    "code": "DaysInYearType.actual",
+    "value": "Actual"
+  },
+  "isInterestRecalculationEnabled": false,
+  "canDefineInstallmentAmount": false,
+  "charges": [
+    {
+      "id": 1,
+      "name": "Borrower service charges",
+      "active": true,
+      "penalty": false,
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 1.5,
+      "chargeTimeType": {
+        "id": 8,
+        "code": "chargeTimeType.instalmentFee",
+        "value": "Installment Fee"
+      },
+      "chargeAppliesTo": {
+        "id": 1,
+        "code": "chargeAppliesTo.loan",
+        "value": "Loan"
+      },
+      "chargeCalculationType": {
+        "id": 2,
+        "code": "chargeCalculationType.percent.of.amount",
+        "value": "% Amount"
+      },
+      "chargePaymentMode": {
+        "id": 0,
+        "code": "chargepaymentmode.regular",
+        "value": "Regular"
+      }
+    }
+  ],
+  "principalVariationsForBorrowerCycle": [],
+  "interestRateVariationsForBorrowerCycle": [],
+  "numberOfRepaymentVariationsForBorrowerCycle": [],
+  "accountingRule": {
+    "id": 2,
+    "code": "accountingRuleType.cash",
+    "value": "CASH BASED"
+  },
+  "canUseForTopup": false,
+  "accountingMappings": {
+    "fundSourceAccount": {
+      "id": 1,
+      "name": "Cash",
+      "glCode": "1"
+    },
+    "loanPortfolioAccount": {
+      "id": 1,
+      "name": "Cash",
+      "glCode": "1"
+    },
+    "transfersInSuspenseAccount": {
+      "id": 1,
+      "name": "Cash",
+      "glCode": "1"
+    },
+    "interestOnLoanAccount": {
+      "id": 4,
+      "name": "Income",
+      "glCode": "4"
+    },
+    "incomeFromFeeAccount": {
+      "id": 4,
+      "name": "Income",
+      "glCode": "4"
+    },
+    "incomeFromPenaltyAccount": {
+      "id": 4,
+      "name": "Income",
+      "glCode": "4"
+    },
+    "incomeFromRecoveryAccount": {
+      "id": 4,
+      "name": "Income",
+      "glCode": "4"
+    },
+    "writeOffAccount": {
+      "id": 3,
+      "name": "Expense",
+      "glCode": "5"
+    },
+    "overpaymentLiabilityAccount": {
+      "id": 2,
+      "name": "Liability",
+      "glCode": "2"
+    }
+  },
+  "multiDisburseLoan": false,
+  "maxTrancheCount": 0,
+  "principalThresholdForLastInstallment": 0,
+  "holdGuaranteeFunds": false,
+  "accountMovesOutOfNPAOnlyOnArrearsCompletion": false,
+  "allowAttributeOverrides": {
+    "amortizationType": true,
+    "interestType": true,
+    "transactionProcessingStrategyId": true,
+    "interestCalculationPeriodType": true,
+    "inArrearsTolerance": true,
+    "repaymentEvery": true,
+    "graceOnPrincipalAndInterestPayment": true,
+    "graceOnArrearsAgeing": true
+  },
+  "syncExpectedWithDisbursementDate": false,
+  "isEqualAmortization": false
+}
