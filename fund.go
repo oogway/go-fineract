@@ -75,21 +75,23 @@ type Summary struct {
 }
 
 type AccountDetails struct {
-	Id          uint64  `json:"id"`
-	AccountNo   string  `json:"accountNo"`
-	ProductId   uint64  `json:"savingsProductId"`
-	ProductName string  `json:"savingsProductName"`
-	Status      StatusT `json:"status"`
-	Statement   Summary `json:"summary"`
+	Id          uint64   `json:"id"`
+	AccountNo   string   `json:"accountNo"`
+	ProductId   uint64   `json:"savingsProductId"`
+	ProductName string   `json:"savingsProductName"`
+	Status      StatusT  `json:"status"`
+	Statement   Summary  `json:"summary"`
+	Currency    Currency `json:"currency"`
 }
 
 type FundAccount struct {
-	Id             uint64  `json:"id"`
-	AccountNo      string  `json:"accountNo"`
-	ProductId      uint64  `json:"productId"`
-	ProductName    string  `json:"productName"`
-	Status         StatusT `json:"status"`
-	AccountBalance float64 `json:"accountBalance"`
+	Id             uint64   `json:"id"`
+	AccountNo      string   `json:"accountNo"`
+	ProductId      uint64   `json:"productId"`
+	ProductName    string   `json:"productName"`
+	Status         StatusT  `json:"status"`
+	AccountBalance float64  `json:"accountBalance"`
+	Currency       Currency `json:"currency"`
 }
 
 type FundAccountResponse struct {
@@ -108,14 +110,21 @@ type GetFundTypeRequest struct {
 }
 
 type Fund struct {
-	Id      uint64  `json:"id"`
-	Name    string  `json:"fullname"`
-	Status  StatusT `json:"status"`
-	Balance float64
+	Id       uint64  `json:"id"`
+	Name     string  `json:"fullname"`
+	Status   StatusT `json:"status"`
+	Balance  float64
+	Currency Currency `json:"currency"`
 }
 
 type FundsRequest struct {
 	Type string
+}
+
+type Currency struct {
+	Code          string `json:"code"`
+	Name          string `json:"name"`
+	DisplaySymbol string `json:"displaySymbol"`
 }
 
 type FundsResponse struct {
@@ -191,18 +200,18 @@ func (client *Client) GetFundType(request *GetFundTypeRequest) (uint32, error) {
 	return 0, errors.New(fmt.Sprintf("No FundType with name %v found", request.Name))
 }
 
-func (client *Client) GetFundValue(fundId string) (float64, error) {
+func (client *Client) GetFundValue(fundId string) (float64, string, error) {
 	response, err := client.GetFundAccounts(fundId)
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
 
 	for _, cursor := range response.FundAccount {
 		if cursor.ProductName == toString(Principal) && cursor.Status.Value == active {
-			return cursor.AccountBalance, nil
+			return cursor.AccountBalance, cursor.Currency.Code, nil
 		}
 	}
-	return 0, errors.New("No active account of type " + toString(Principal))
+	return 0, "", errors.New("No active account of type " + toString(Principal))
 }
 
 func (client *Client) GetFundAccounts(fundId string) (*FundAccountResponse, error) {
@@ -222,9 +231,10 @@ func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
 	}
 	for _, cursor := range fundsResponse.Fund {
 		if cursor.Status.Value == active {
-			balance, err := client.GetFundValue(toString(cursor.Id))
+			balance, currencyCode, err := client.GetFundValue(toString(cursor.Id))
 			if err == nil {
 				cursor.Balance = balance
+				cursor.Currency.Code = currencyCode
 			}
 		}
 	}
