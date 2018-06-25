@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"log"
-
 	"github.com/bmizerany/assert"
 )
 
@@ -89,7 +87,6 @@ func Suite(t *testing.T, client *Client, fundId string) {
 			t.Fatalf("retrieve list of fund(s): %v", err)
 		}
 		assert.NotEqual(t, resp.Fund[0].Currency.Code, "")
-		log.Println(resp.Fund[0].Currency.Code)
 	})
 
 	t.Run("TestGetFund", func(t *testing.T) {
