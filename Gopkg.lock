@@ -3,6 +3,24 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/bmizerany/assert"
+  packages = ["."]
+  revision = "b7ed37b82869576c289d7d97fb2bbd8b64a0cb28"
+
+[[projects]]
+  name = "github.com/kr/pretty"
+  packages = ["."]
+  revision = "73f6ac0b30a98e433b289500d779f50c1a6f0712"
+  version = "v0.1.0"
+
+[[projects]]
+  name = "github.com/kr/text"
+  packages = ["."]
+  revision = "e2ffdb16a802fe2bb95e2e35ff34f0e53aeef34f"
+  version = "v0.1.0"
+
+[[projects]]
+  branch = "master"
   name = "github.com/meson10/highbrow"
   packages = ["."]
   revision = "88261ca7babdb56d0a2b44e63a1c99ef62a94494"
@@ -10,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "86130096db0d168e1616bf7165d6b6725dcbed5052c2b4643a7b49a6cb15df03"
+  inputs-digest = "eba808a9cc5f38045a3198cb657aade33ba2d5885fbe2675648b22875c7bed3a"
   solver-name = "gps-cdcl"
   solver-version = 1

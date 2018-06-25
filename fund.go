@@ -114,7 +114,7 @@ type Fund struct {
 	Name     string  `json:"fullname"`
 	Status   StatusT `json:"status"`
 	Balance  float64
-	Currency Currency `json:"currency"`
+	Currency Currency
 }
 
 type FundsRequest struct {
@@ -128,8 +128,8 @@ type Currency struct {
 }
 
 type FundsResponse struct {
-	TotalFilteredRecords uint64 `json:"totalFilteredRecords"`
-	Fund                 []Fund `json:"pageItems"`
+	TotalFilteredRecords uint64  `json:"totalFilteredRecords"`
+	Fund                 []*Fund `json:"pageItems"`
 }
 
 func (client *Client) AccountDeposit(accountId string, request *TxRequest) (*TxResponse, error) {
