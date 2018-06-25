@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/bmizerany/assert"
 )
 
 const (
@@ -63,11 +65,12 @@ func Suite(t *testing.T, client *Client, fundId string) {
 	var accntId string
 
 	t.Run("TestGetFundValue", func(t *testing.T) {
-		resp, err := client.GetFundValue(fundId)
+		resp, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 		fundInitialBalance = resp
+		assert.NotEqual(t, currency, "")
 	})
 
 	t.Run("TestGetFundAccountId", func(t *testing.T) {
@@ -79,21 +82,26 @@ func Suite(t *testing.T, client *Client, fundId string) {
 	})
 
 	t.Run("TestGetFunds", func(t *testing.T) {
-		if resp, err := client.GetFunds(&FundsRequest{Type: Lending}); err != nil || resp.TotalFilteredRecords == 0 {
+		resp, err := client.GetFunds(&FundsRequest{Type: Lending})
+		if err != nil || resp.TotalFilteredRecords == 0 {
 			t.Fatalf("retrieve list of fund(s): %v", err)
 		}
+		assert.NotEqual(t, resp.Fund[0].Currency.Code, "")
 	})
 
 	t.Run("TestGetFund", func(t *testing.T) {
-		if resp, err := client.GetFund(fundId); err != nil || resp.Id == 0 {
+		resp, err := client.GetFund(fundId)
+		if err != nil || resp.Id == 0 {
 			t.Fatalf("retrieve core details of fund: %v", err)
 		}
 	})
 
 	t.Run("TestGetAccount", func(t *testing.T) {
-		if resp, err := client.GetAccount(accntId); err != nil || resp.ProductId == 0 {
+		resp, err := client.GetAccount(accntId)
+		if err != nil || resp.ProductId == 0 {
 			t.Fatalf("retrieve core details of account: %v", err)
 		}
+		assert.NotEqual(t, resp.Currency.Code, "")
 	})
 
 	t.Run("TestGetPaymentType", func(t *testing.T) {
@@ -143,7 +151,7 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 	}
 
 	t.Run("TestFundIncrement", func(t *testing.T) {
-		before, err := client.GetFundValue(fundId)
+		before, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
@@ -161,16 +169,17 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 			t.Fatalf("Could not increment the fund value: %v", err)
 		}
 
-		after, err := client.GetFundValue(fundId)
+		after, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
 		assertEqual(t, before+txAmount, after, "Fund balance was not incremented")
+		assert.NotEqual(t, currency, "")
 	})
 
 	t.Run("TestFundDecrement", func(t *testing.T) {
-		before, err := client.GetFundValue(fundId)
+		before, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
@@ -188,12 +197,13 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 			t.Fatalf("Could not decrement the fund value: %v", err)
 		}
 
-		after, err := client.GetFundValue(fundId)
+		after, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
 		assertEqual(t, before-txAmount, after, "Fund balance was not decremented")
+		assert.NotEqual(t, currency, "")
 	})
 }
 
