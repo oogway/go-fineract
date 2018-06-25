@@ -121,6 +121,9 @@ type GetLoanResponse struct {
 	TransactionProcessingStrategy float64           `json:"transactionProcessingStrategyId"`
 	Lstatus                       Status            `json:"status"`
 	RepaymentSchedule             RepaymentSchedule `json:"repaymentSchedule"`
+	SubmittedOn                   []uint32          `json:"submittedOnDate,omitempty"`
+	DisbursedOn                   []uint32          `json:"actualDisbursementDate,omitempty"`
+	MaturityOn                    []uint32          `json:"expectedMaturityDate,omitempty"`
 }
 
 type GetAllLoanRequest struct {
