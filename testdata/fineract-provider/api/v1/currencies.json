@@ -1,0 +1,12 @@
+{
+    "selectedCurrencyOptions": [
+        {
+            "code": "IDR",
+            "name": "US Dollar",
+            "decimalPlaces": 2,
+            "displaySymbol": "$",
+            "nameCode": "currency.IDR",
+            "displayLabel": "US Dollar ($)"
+        }
+    ]
+}
