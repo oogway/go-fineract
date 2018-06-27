@@ -2,11 +2,11 @@
     "selectedCurrencyOptions": [
         {
             "code": "IDR",
-            "name": "US Dollar",
+            "name": "Indonesia Rupiah",
             "decimalPlaces": 2,
             "displaySymbol": "$",
             "nameCode": "currency.IDR",
-            "displayLabel": "US Dollar ($)"
+            "displayLabel": "Indonesia Rupiah ($)"
         }
     ]
 }
