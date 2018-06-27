@@ -97,6 +97,7 @@ type Status struct {
 	Value               string `json:"Value"`
 	PendingApproval     bool   `json:"pendingApproval"`
 	WaitingForDisbursal bool   `json:"waitingForDisbursal"`
+	Active              bool   `json:"active"`
 }
 
 type RepaymentSchedule struct {
