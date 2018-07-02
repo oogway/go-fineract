@@ -75,13 +75,20 @@ type GetLoanProductResponse struct {
 }
 
 type Charge struct {
-	Id     uint32  `json:"id"`
-	Amount float64 `json:"amount"`
+	Id         uint32    `json:"id"`
+	Amount     float64   `json:"amount"`
+	ChargeTime CodeValue `json:"chargeTimeType"`
 }
 
 type LoanCharge struct {
 	Id     uint32  `json:"chargeId"`
 	Amount float64 `json:"amount"`
+}
+
+type CodeValue struct {
+	Id    uint32 `json:"id"`
+	Code  string `json:"code"`
+	Value string `json:"value"`
 }
 
 type GetLoanProductsRequest struct{}
@@ -103,6 +110,7 @@ type Status struct {
 type RepaymentSchedule struct {
 	TotalInterestCharged   float64       `json:"totalInterestCharged,omitempty"`
 	TotalFeeCharged        float64       `json:"totalFeeChargesCharged,omitempty"`
+	TotalPenaltyCharged    float64       `json:"totalPenaltyChargesCharged"`
 	TotalRepaymentExpected float64       `json:"totalRepaymentExpected,omitempty"`
 	TotalRepayment         float64       `json:"totalRepayment,omitempty"`
 	TotalOutstanding       float64       `json:"totalOutstanding,omitempty"`
