@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 func TestSuiteLoanMock(t *testing.T) {
@@ -36,14 +38,24 @@ func TestSuiteLoan(t *testing.T) {
 
 func LoanSuite(t *testing.T, client *Client, loanProductId string) {
 
-	t.Run("TestGetLoanProduct with service charges", func(t *testing.T) {
+	t.Run("TestGetLoanProduct with service & penalty charges", func(t *testing.T) {
 		resp, err := client.GetLoanProduct(loanProductId, &GetLoanProductRequest{})
 		if err != nil {
 			t.Fatalf("Cannot get the loan product: %v", err)
 		}
 		log.Println(resp)
 		if len(resp.Charges) == 0 {
-			t.Fatalf("No service charge found")
+			t.Fatalf("No charge found")
 		}
+		var penaltyCharge, serviceCharge = false, false
+		for _, charge := range resp.Charges {
+			if charge.ChargeTime.Code == "chargeTimeType.overdueInstallment" {
+				penaltyCharge = true
+			} else if charge.ChargeTime.Code == "chargeTimeType.instalmentFee" {
+				serviceCharge = true
+			}
+		}
+		assert.Equal(t, penaltyCharge, true)
+		assert.Equal(t, serviceCharge, true)
 	})
 }
