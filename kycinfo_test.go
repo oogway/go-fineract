@@ -18,8 +18,8 @@ func TestClient_GetKycInfosByClientID(t *testing.T) {
 	for _, kyc := range kycs {
 		assert.NotEqual(t, nil, kyc, "kyc should not be null")
 	}
-	assert.Equal(t, kycs[0].ID, uint64(8), "Incorrect ID")
-	assert.Equal(t, kycs[0].ClientID, uint64(2), "Incorrect ClientID")
+	assert.Equal(t, kycs[0].ID, int64(8), "Incorrect ID")
+	assert.Equal(t, kycs[0].ClientID, int64(2), "Incorrect ClientID")
 	assert.Equal(t, kycs[0].FullName, "kyc full name 1", "Incorrect full name")
 	assert.Equal(t, kycs[0].NationalID, "123", "Incorrect national ID")
 	assert.Equal(t, kycs[0].HomeAddress, "kyc address", "Incorrect address")
@@ -27,8 +27,8 @@ func TestClient_GetKycInfosByClientID(t *testing.T) {
 	assert.Equal(t, kycs[0].DayOfBirth, "2018-07-02", "Incorrect dob")
 	assert.Equal(t, kycs[0].ExtraInfos, "{\"extraInfo\":\"extraInfo\"}", "Incorrect extra infos")
 
-	assert.Equal(t, kycs[1].ID, uint64(9), "Incorrect ID")
-	assert.Equal(t, kycs[1].ClientID, uint64(2), "Incorrect ClientID")
+	assert.Equal(t, kycs[1].ID, int64(9), "Incorrect ID")
+	assert.Equal(t, kycs[1].ClientID, int64(2), "Incorrect ClientID")
 	assert.Equal(t, kycs[1].FullName, "test name 2", "Incorrect full name")
 	assert.Equal(t, kycs[1].NationalID, "123456", "Incorrect national ID")
 	assert.Equal(t, kycs[1].HomeAddress, "address", "Incorrect address")
@@ -46,8 +46,8 @@ func TestClient_GetKycInfosByID(t *testing.T) {
 	kyc := kycsRes.KYCInfo
 	assert.Equal(t, nil, err)
 	assert.Equal(t, kyc != nil, true, "kyc should not be nil")
-	assert.Equal(t, kyc.ID, uint64(17), "Incorrect ID")
-	assert.Equal(t, kyc.ClientID, uint64(3), "Incorrect ClientID")
+	assert.Equal(t, kyc.ID, int64(17), "Incorrect ID")
+	assert.Equal(t, kyc.ClientID, int64(3), "Incorrect ClientID")
 	assert.Equal(t, kyc.FullName, "test name", "Incorrect full name")
 	assert.Equal(t, kyc.NationalID, "1234567", "Incorrect national ID")
 	assert.Equal(t, kyc.HomeAddress, "132 ham nghi", "Incorrect address")
@@ -87,9 +87,9 @@ func TestClient_CreateKYCInfo(t *testing.T) {
 	}
 	res, err := client.CreateKYCInfo(kyc)
 	assert.Equal(t, err, nil, "Error should be nil")
-	assert.Equal(t, res.OfficeID, uint64(1), "Incorrect officeID")
-	assert.Equal(t, res.ClientID, uint64(3), "Incorrect clientID")
-	assert.Equal(t, res.ResourceID, uint64(3), "Incorrect resourceID")
+	assert.Equal(t, res.OfficeID, int64(1), "Incorrect officeID")
+	assert.Equal(t, res.ClientID, int64(3), "Incorrect clientID")
+	assert.Equal(t, res.ResourceID, int64(3), "Incorrect resourceID")
 
 }
 
@@ -114,8 +114,8 @@ func TestClient_UpdateKYCInfo(t *testing.T) {
 	}
 	res, err := client.UpdateKYCInfo(kyc)
 	assert.Equal(t, err, nil, "Error should be nil")
-	assert.Equal(t, res.OfficeID, uint64(1), "Incorrect officeID")
-	assert.Equal(t, res.ClientID, uint64(3), "Incorrect clientID")
-	assert.Equal(t, res.ResourceID, uint64(3), "Incorrect resourceID")
+	assert.Equal(t, res.OfficeID, int64(1), "Incorrect officeID")
+	assert.Equal(t, res.ClientID, int64(3), "Incorrect clientID")
+	assert.Equal(t, res.ResourceID, int64(3), "Incorrect resourceID")
 
 }

@@ -13,20 +13,20 @@ const (
 
 type KycInfo struct {
 	BaseKycInfo
-	ID       uint64 `json:"ID"`
-	ClientID uint64 `json:"clientID"`
+	ID       int64 `json:"ID"`
+	ClientID int64 `json:"clientID"`
 }
 
 type KycInfoCreateRequest struct {
 	BaseKycInfo
-	ClientID   uint64 `json:"-"`
+	ClientID   int64 `json:"-"`
 	DateFormat string `json:"dateFormat"`
 }
 
 type KycInfoUpdateRequest struct {
 	BaseKycInfo
-	ID         uint64 `json:"-"`
-	ClientID   uint64 `json:"-"`
+	ID         int64 `json:"-"`
+	ClientID   int64 `json:"-"`
 	DateFormat string `json:"dateFormat"`
 }
 
@@ -36,7 +36,7 @@ type BaseKycInfo struct {
 	HomeAddress string `json:"home_address"`
 	DayOfBirth  string `json:"date_of_birth"`
 	Gender      Gender `json:"-"`
-	GenderCode  uint64 `json:"Gender_cd_gender"`
+	GenderCode  int64 `json:"Gender_cd_gender"`
 	Locale      string `json:"locale"`
 	ExtraInfos  string `json:"extra_infos"`
 }
@@ -47,14 +47,14 @@ const (
 	GenderFemale = "Female"
 )
 
-func fromCode(code uint64) Gender {
-	if code == uint64(14) {
+func fromCode(code int64) Gender {
+	if code == 14 {
 		return GenderMale
 	}
 	return GenderFemale
 }
 
-func fromGender(gender Gender) uint64 {
+func fromGender(gender Gender) int64 {
 	if gender == GenderMale {
 		return 14
 	}
@@ -62,15 +62,15 @@ func fromGender(gender Gender) uint64 {
 }
 
 type GetKycInfoByIDRequest struct {
-	ClientID uint64 `json:"clientID"`
-	ID       uint64 `json:"clientID"`
+	ClientID int64 `json:"clientID"`
+	ID       int64 `json:"clientID"`
 }
 
 type GetKycInfoByIDResponse struct {
 	KYCInfo *KycInfo `json:"kycInfos"`
 }
 type GetKycInfosByClientIDRequest struct {
-	ClientID uint64 `json:"clientID"`
+	ClientID int64 `json:"clientID"`
 }
 
 type GetKycInfosByClientIDResponse struct {
@@ -78,20 +78,20 @@ type GetKycInfosByClientIDResponse struct {
 }
 
 type CreateKycInfoResponse struct {
-	OfficeID   uint64 `json:"officeID"`
-	ClientID   uint64 `json:"clientID"`
-	ResourceID uint64 `json:"resourceID"`
+	OfficeID   int64 `json:"officeID"`
+	ClientID   int64 `json:"clientID"`
+	ResourceID int64 `json:"resourceID"`
 }
 
 func kycPath() string {
 	return path.Join(baseURL, kycInfo)
 }
 
-func kycWithClientIDPath(clientID uint64) string {
+func kycWithClientIDPath(clientID int64) string {
 	return kycPath() + fmt.Sprintf("/%d?genericResultSet=true", clientID)
 }
 
-func kycWithIDPath(clientID uint64, ID uint64) string {
+func kycWithIDPath(clientID int64, ID int64) string {
 	return kycPath() + fmt.Sprintf("/%d/%d?genericResultSet=true", clientID, ID)
 }
 
@@ -188,15 +188,15 @@ func (client *Client) rowToKYC(row []interface{}) (*KycInfo, error) {
 	if len(row) < 7 {
 		return nil, fmt.Errorf("InvalID KYC info", row)
 	}
-	ID, err := strconv.ParseUint(row[0].(string), 10, 64)
+	ID, err := strconv.ParseInt(row[0].(string), 10, 64)
 	if nil != err {
 		return nil, err
 	}
-	clientID, err := strconv.ParseUint(row[1].(string), 10, 64)
+	clientID, err := strconv.ParseInt(row[1].(string), 10, 64)
 	if nil != err {
 		return nil, err
 	}
-	genderCode, err := strconv.ParseUint(row[6].(string), 10, 8)
+	genderCode, err := strconv.ParseInt(row[6].(string), 10, 8)
 	kycInfo := &KycInfo{
 		BaseKycInfo: BaseKycInfo{
 			FullName:    row[2].(string),
