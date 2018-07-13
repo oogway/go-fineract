@@ -63,7 +63,7 @@ func fromGender(gender Gender) int64 {
 
 type GetKycInfoByIDRequest struct {
 	ClientID int64 `json:"clientID"`
-	ID       int64 `json:"clientID"`
+	ID       int64 `json:"id"`
 }
 
 type GetKycInfoByIDResponse struct {
