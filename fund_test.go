@@ -65,7 +65,7 @@ func Suite(t *testing.T, client *Client, fundId string) {
 	var accntId string
 
 	t.Run("TestGetFundValue", func(t *testing.T) {
-		resp, currency, err := client.GetFundValue(fundId)
+		resp, _, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
@@ -123,7 +123,7 @@ func Suite(t *testing.T, client *Client, fundId string) {
 
 func ISuite(t *testing.T, client *Client, fundId string) {
 	var txAmount float64 = 500
-	var accountId string
+	var accountId, promiseAccountId string
 
 	resp, err := client.GetPaymentType(&GetPaymentTypeRequest{})
 	if err != nil {
@@ -143,15 +143,20 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 	for _, cursor := range response.FundAccount {
 		if cursor.ProductName == toString(Principal) && cursor.Status.Value == active {
 			accountId = cursor.AccountNo
-			break
+		}
+		if cursor.ProductName == toString(Promise) && cursor.Status.Value == active {
+			promiseAccountId = cursor.AccountNo
 		}
 	}
 	if accountId == "" {
 		t.Fatalf("failed to get accountId: %v", err)
 	}
+	if promiseAccountId == "" {
+		t.Fatalf("failed to get promiseAccountId: %v", err)
+	}
 
 	t.Run("TestFundIncrement", func(t *testing.T) {
-		before, currency, err := client.GetFundValue(fundId)
+		before, limitB, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
@@ -169,17 +174,18 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 			t.Fatalf("Could not increment the fund value: %v", err)
 		}
 
-		after, currency, err := client.GetFundValue(fundId)
+		after, limitA, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
 		assertEqual(t, before+txAmount, after, "Fund balance was not incremented")
+		assertEqual(t, limitA, limitB, "Fund Increment should not impact fund promise")
 		assert.NotEqual(t, currency, "")
 	})
 
 	t.Run("TestFundDecrement", func(t *testing.T) {
-		before, currency, err := client.GetFundValue(fundId)
+		before, limitB, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
@@ -197,13 +203,43 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 			t.Fatalf("Could not decrement the fund value: %v", err)
 		}
 
-		after, currency, err := client.GetFundValue(fundId)
+		after, limitA, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
 		assertEqual(t, before-txAmount, after, "Fund balance was not decremented")
 		assert.NotEqual(t, currency, "")
+		assert.Equal(t, limitA, limitB, "Fund Decrement should not impact fund promise")
+	})
+
+	t.Run("TestFundReserve", func(t *testing.T) {
+		before, limitB, currency, err := client.GetFundValue(fundId)
+		if err != nil {
+			t.Fatalf("Cannot get the fund value: %v", err)
+		}
+
+		//decrement
+		req := &TxRequest{
+			Locale:            "en",
+			DateFormat:        "dd MMMM yyyy",
+			TransactionDate:   time.Now().Format("02 January 2006"),
+			TransactionAmount: fmt.Sprintf("%v", txAmount),
+			PaymentTypeId:     paymentId,
+		}
+		_, err = client.AccountWithdraw(promiseAccountId, req)
+		if err != nil {
+			t.Fatalf("Could not decrement the fund value: %v", err)
+		}
+
+		after, limitA, currency, err := client.GetFundValue(fundId)
+		if err != nil {
+			t.Fatalf("Cannot get the fund value: %v", err)
+		}
+
+		assertEqual(t, limitB-txAmount, limitA, "Fund was not reserved")
+		assert.NotEqual(t, currency, "")
+		assert.Equal(t, before, after, "Fund reserve should not impact fund balance")
 	})
 }
 
