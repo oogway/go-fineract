@@ -275,7 +275,8 @@ func (client *Client) GetFundAccountId(fundId string) (*FundAccountId, error) {
 			fundAccountId.InterestAccountId = toString(cursor.Id)
 		} else if cursor.Status.Value == active && cursor.ProductName == toString(Promise) {
 			fundAccountId.PromiseAccountId = toString(cursor.Id)
-		} else if fundAccountId.PrincipalAccountId != "" && fundAccountId.InterestAccountId != "" && fundAccountId.PromiseAccountId != "" {
+		} 
+		if fundAccountId.PrincipalAccountId != "" && fundAccountId.InterestAccountId != "" && fundAccountId.PromiseAccountId != "" {
 			break
 		}
 	}
