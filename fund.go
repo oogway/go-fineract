@@ -220,8 +220,7 @@ func (client *Client) GetFundValue(fundId string) (float64, float64, string, err
 			principal = cursor.AccountBalance
 			currency = cursor.Currency.Code
 			hasPrincipal = true
-		}
-		if cursor.ProductName == toString(Promise) && cursor.Status.Value == active {
+		} else if cursor.ProductName == toString(Promise) && cursor.Status.Value == active {
 			promise = cursor.AccountBalance
 		}
 	}
@@ -240,6 +239,7 @@ func (client *Client) GetFundAccounts(fundId string) (*FundAccountResponse, erro
 	return response, nil
 }
 
+//returns list of active funds
 func (client *Client) GetFunds(request *FundsRequest) (*FundsResponse, error) {
 	tempPath, _ := url.Parse(clientsURL() + fundsURLParams(request.Type))
 	var fundsResponse *FundsResponse
@@ -271,14 +271,11 @@ func (client *Client) GetFundAccountId(fundId string) (*FundAccountId, error) {
 	for _, cursor := range response.FundAccount {
 		if cursor.Status.Value == active && cursor.ProductName == toString(Principal) {
 			fundAccountId.PrincipalAccountId = toString(cursor.Id)
-		}
-		if cursor.Status.Value == active && cursor.ProductName == toString(Interest) {
+		} else if cursor.Status.Value == active && cursor.ProductName == toString(Interest) {
 			fundAccountId.InterestAccountId = toString(cursor.Id)
-		}
-		if cursor.Status.Value == active && cursor.ProductName == toString(Promise) {
+		} else if cursor.Status.Value == active && cursor.ProductName == toString(Promise) {
 			fundAccountId.PromiseAccountId = toString(cursor.Id)
-		}
-		if fundAccountId.PrincipalAccountId != "" && fundAccountId.InterestAccountId != "" && fundAccountId.PromiseAccountId != "" {
+		} else if fundAccountId.PrincipalAccountId != "" && fundAccountId.InterestAccountId != "" && fundAccountId.PromiseAccountId != "" {
 			break
 		}
 	}
