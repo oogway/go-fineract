@@ -54,9 +54,9 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Println(string(body))
-	log.Println(resp.StatusCode)
-	log.Println("------------------")
+	//log.Println(string(body))
+	//log.Println(resp.StatusCode)
+	//log.Println("------------------")
 	if resp.StatusCode != 200 {
 		rawMessage := json.RawMessage(body)
 		return &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
