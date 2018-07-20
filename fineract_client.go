@@ -69,7 +69,7 @@ func NewMockClient(mockTransport *MockTransport) (*Client, error) {
 	})
 }
 
-func makeClient(mock bool) (*Client, error) {
+func MakeClient(mock bool) (*Client, error) {
 	if mock {
 		return NewMockClient(&MockTransport{DirectoryPath: "testdata"})
 	}

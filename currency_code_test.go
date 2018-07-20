@@ -7,7 +7,7 @@ import (
 )
 
 func TestSuiteCurrencyCode(t *testing.T) {
-	client, err := makeClient(true)
+	client, err := MakeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}

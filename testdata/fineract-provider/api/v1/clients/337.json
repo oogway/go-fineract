@@ -1,0 +1,63 @@
+{
+  "id": 323,
+  "accountNo": "000000323",
+  "status": {
+    "id": 300,
+    "code": "clientStatusType.active",
+    "value": "Active"
+  },
+  "subStatus": {
+    "active": false,
+    "mandatory": false
+  },
+  "active": true,
+  "activationDate": [ 2018, 7, 18 ],
+  "firstname": "Jethro",
+  "lastname": "Saing",
+  "displayName": "Jethro Saing",
+  "mobileNo": "6281100216693",
+  "gender": {
+    "active": false,
+    "mandatory": false
+  },
+  "clientType": {
+    "active": false,
+    "mandatory": false
+  },
+  "clientClassification": {
+    "active": false,
+    "mandatory": false
+  },
+  "isStaff": false,
+  "officeId": 1,
+  "officeName": "Head Office",
+  "timeline": {
+    "submittedOnDate": [
+      2018,
+      7,
+      18
+    ],
+    "submittedByUsername": "mifos",
+    "submittedByFirstname": "App",
+    "submittedByLastname": "Administrator",
+    "activatedOnDate": [
+      2018,
+      7,
+      18
+    ],
+    "activatedByUsername": "mifos",
+    "activatedByFirstname": "App",
+    "activatedByLastname": "Administrator"
+  },
+  "groups": [],
+  "clientNonPersonDetails": {
+    "constitution": {
+      "active": false,
+      "mandatory": false
+    },
+    "mainBusinessLine": {
+      "active": false,
+      "mandatory": false
+    }
+  }
+}
