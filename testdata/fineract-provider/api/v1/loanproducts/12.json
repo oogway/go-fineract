@@ -99,6 +99,41 @@
         "code": "chargepaymentmode.regular",
         "value": "Regular"
       }
+    },
+    {
+      "id": 6,
+      "name": "Borrower service charges",
+      "active": true,
+      "penalty": false,
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 1.5,
+      "chargeTimeType": {
+        "id": 8,
+        "code": "chargeTimeType.overdueInstallment",
+        "value": "Overdue Installment Fee"
+      },
+      "chargeAppliesTo": {
+        "id": 1,
+        "code": "chargeAppliesTo.loan",
+        "value": "Loan"
+      },
+      "chargeCalculationType": {
+        "id": 2,
+        "code": "chargeCalculationType.percent.of.amount",
+        "value": "% Amount"
+      },
+      "chargePaymentMode": {
+        "id": 0,
+        "code": "chargepaymentmode.regular",
+        "value": "Regular"
+      }
     }
   ],
   "principalVariationsForBorrowerCycle": [],

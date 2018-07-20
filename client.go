@@ -41,11 +41,12 @@ type dataTableInfo struct {
 }
 
 type CreateClientResponse struct {
-	ID string `json:"clientId"`
+	ID int64 `json:"clientId"`
 }
 
 func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string, merchantName string) (*CreateClientResponse, error) {
 	request := &createClientRequest{
+		ClientInfo: clientInfo,
 		OfficeID:   officeId,
 		DateFormat: defaultDateFormat,
 		SubmitOn:   formatDate(clientInfo.SubmitDate),
