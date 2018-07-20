@@ -203,12 +203,15 @@ func (client *Client) GetFundType(request *GetFundTypeRequest) (uint32, error) {
 	return 0, errors.New(fmt.Sprintf("No FundType with name %v found", request.Name))
 }
 
+//This gives amount available in fund for disbursement, doesnot include interest component
+//specifically being used during checkFundAvailability
 func (client *Client) GetFundValue(fundId string) (float64, float64, string, error) {
 	response, err := client.GetFundAccounts(fundId)
 	if err != nil {
-		return 0, 0, "", err
+		return 0, 0, "", errors.New("Not found fund with id " + fundId)
 	}
 	var principal, promise float64
+
 	var currency string
 	hasPrincipal := false
 
