@@ -9,3 +9,6 @@ test_loan:
 
 test_loan_full:
 	go test -v loan_test.go loan.go fineract_client.go fineract_mock_client.go common.go error.go
+
+test_user_info:
+	go test -v user_client_test.go user_client.go fineract_client.go fineract_mock_client.go common.go error.go fund.go
