@@ -7,7 +7,7 @@ import (
 )
 
 func TestClient_GetKycInfosByClientID(t *testing.T) {
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func TestClient_GetKycInfosByClientID(t *testing.T) {
 }
 
 func TestClient_GetKycInfosByID(t *testing.T) {
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func TestClient_GetKycInfosByID(t *testing.T) {
 }
 
 func TestClient_GetKycInfosByIDWithNotExistedID(t *testing.T) {
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -68,7 +68,7 @@ func TestClient_GetKycInfosByIDWithNotExistedID(t *testing.T) {
 }
 
 func TestClient_CreateKYCInfo(t *testing.T) {
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -94,7 +94,7 @@ func TestClient_CreateKYCInfo(t *testing.T) {
 }
 
 func TestClient_UpdateKYCInfo(t *testing.T) {
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}

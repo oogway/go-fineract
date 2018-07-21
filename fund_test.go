@@ -20,7 +20,7 @@ func TestSuiteMock(t *testing.T) {
 	if !testing.Short() {
 		t.Skip("Skipped mock tests in long mode")
 	}
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func TestSuite(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipped integrated tests in short mode")
 	}
-	client, err := MakeClient(false)
+	client, err := makeClient(false)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -7,7 +7,7 @@ import (
 )
 
 func TestUserInfo(t *testing.T) {
-	client, err := MakeClient(true)
+	client, err := makeClient(true)
 	if err != nil {
 		t.Fatalf("Cannot create new client: %v", err)
 	}
