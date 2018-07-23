@@ -4,8 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"log"
-
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,7 +16,6 @@ func TestCreateClient(t *testing.T) {
 		LastName:       "last name",
 		Active:         true,
 		Locale:         "en",
-		MobileNo:       "628123123",
 		CountryCode:    "62",
 		PhoneNumber:    "8123123",
 		SubmitDate:     time.Now(),
@@ -26,7 +23,6 @@ func TestCreateClient(t *testing.T) {
 	}
 
 	response, err := client.CreateClient(clientReq, "merchant_user_id", "merchant_name")
-	log.Printf("%+v", response)
 	require.Nil(t, err)
 	require.NotNil(t, response)
 	require.Equal(t, int64(1001), response.ID)

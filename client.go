@@ -63,6 +63,9 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 		},
 	}
 
+	request.PhoneNumber = ""
+	request.CountryCode = ""
+
 	var response CreateClientResponse
 
 	tempPath, _ := url.Parse(clientsURL())
@@ -70,6 +73,7 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 	if err := client.MakeRequest(http.MethodPost, path, request, &response); err != nil {
 		return nil, err
 	}
+
 	return &response, nil
 }
 
