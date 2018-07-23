@@ -18,8 +18,8 @@ type ClientInfo struct {
 	LastName       string    `json:"lastname"`
 	Active         bool      `json:"active"`
 	Locale         string    `json:"locale"`
-	CountryCode    string    `json:"countryCode,omitempty"`
-	PhoneNumber    string    `json:"phoneNumber,omitempty"`
+	CountryCode    string    `json:"_"`
+	PhoneNumber    string    `json:"_"`
 	SubmitDate     time.Time `json:"_"`
 	ActivationDate time.Time `json:"_"`
 }
@@ -62,9 +62,6 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 			},
 		},
 	}
-
-	request.PhoneNumber = ""
-	request.CountryCode = ""
 
 	var response CreateClientResponse
 
