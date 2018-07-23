@@ -1,19 +1,16 @@
 package fineract
 
 import (
-	"net/http"
-	"time"
 	"fmt"
+	"net/http"
+	"net/url"
+	"time"
 )
 
 const (
-	registeredTableName = "m_merchant"
 	officeId            = "1"
+	registeredTableName = "m_merchant"
 	defaultDateFormat   = "dd MMMM yyyy"
-)
-
-const (
-	createClientURL = "/fineract-provider/api/v1/clients?tenantIdentifier=default"
 )
 
 type ClientInfo struct {
@@ -22,6 +19,8 @@ type ClientInfo struct {
 	Active         bool      `json:"active"`
 	Locale         string    `json:"locale"`
 	MobileNo       string    `json:"mobileNo"`
+	CountryCode    string    `json:"countryCode,omitempty"`
+	PhoneNumber    string    `json:"phoneNumber,omitempty"`
 	SubmitDate     time.Time `json:"_"`
 	ActivationDate time.Time `json:"_"`
 }
@@ -45,6 +44,12 @@ type CreateClientResponse struct {
 }
 
 func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string, merchantName string) (*CreateClientResponse, error) {
+	// Store phone number in "<country-code>_<phone_number>"
+	clientInfo.MobileNo = fmt.Sprintf("%s_%s", clientInfo.CountryCode, clientInfo.PhoneNumber)
+	// Set these to empty strings so on marshalling these will be ignored, as this endpoint doesn't accept these parameters
+	clientInfo.PhoneNumber = ""
+	clientInfo.CountryCode = ""
+
 	request := &createClientRequest{
 		ClientInfo: clientInfo,
 		OfficeID:   officeId,
@@ -61,8 +66,12 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 			},
 		},
 	}
+
 	var response CreateClientResponse
-	if err := client.MakeRequest(http.MethodPost, createClientURL, request, &response); err != nil {
+
+	tempPath, _ := url.Parse(clientsURL())
+	path := client.HostName.ResolveReference(tempPath).String()
+	if err := client.MakeRequest(http.MethodPost, path, request, &response); err != nil {
 		return nil, err
 	}
 	return &response, nil
