@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Head Office",
+    "nameDecorated": "Head Office",
+    "externalId": "1",
+    "openingDate": [
+      2009,
+      1,
+      1
+    ],
+    "hierarchy": "."
+  },
+  {
+    "id": 2,
+    "name": "TS-TOKO Fund Office",
+    "nameDecorated": "....TS-TOKO Fund Office",
+    "externalId": "TSFund",
+    "openingDate": [
+      2018,
+      5,
+      16
+    ],
+    "hierarchy": ".2.",
+    "parentId": 1,
+    "parentName": "Head Office"
+  },
+  {
+    "id": 3,
+    "name": "TS-TOKO Escrow Fund Office",
+    "nameDecorated": "....TS-TOKO Escrow Fund Office",
+    "externalId": "TSEscrowFund",
+    "openingDate": [
+      2018,
+      5,
+      16
+    ],
+    "hierarchy": ".3.",
+    "parentId": 1,
+    "parentName": "Head Office"
+  }
+]
