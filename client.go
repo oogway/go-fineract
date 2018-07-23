@@ -18,7 +18,6 @@ type ClientInfo struct {
 	LastName       string    `json:"lastname"`
 	Active         bool      `json:"active"`
 	Locale         string    `json:"locale"`
-	MobileNo       string    `json:"mobileNo"`
 	CountryCode    string    `json:"countryCode,omitempty"`
 	PhoneNumber    string    `json:"phoneNumber,omitempty"`
 	SubmitDate     time.Time `json:"_"`
@@ -27,6 +26,7 @@ type ClientInfo struct {
 
 type createClientRequest struct {
 	*ClientInfo
+	MobileNo   string          `json:"mobileNo"`
 	OfficeID   string          `json:"officeId"`
 	DateFormat string          `json:"dateFormat"`
 	SubmitOn   string          `json:"submittedOnDate"`
@@ -45,13 +45,9 @@ type CreateClientResponse struct {
 
 func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string, merchantName string) (*CreateClientResponse, error) {
 	// Store phone number in "<country-code>_<phone_number>"
-	clientInfo.MobileNo = fmt.Sprintf("%s_%s", clientInfo.CountryCode, clientInfo.PhoneNumber)
-	// Set these to empty strings so on marshalling these will be ignored, as this endpoint doesn't accept these parameters
-	clientInfo.PhoneNumber = ""
-	clientInfo.CountryCode = ""
-
 	request := &createClientRequest{
 		ClientInfo: clientInfo,
+		MobileNo:   fmt.Sprintf("%s_%s", clientInfo.CountryCode, clientInfo.PhoneNumber),
 		OfficeID:   officeId,
 		DateFormat: defaultDateFormat,
 		SubmitOn:   formatDate(clientInfo.SubmitDate),

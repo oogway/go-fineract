@@ -20,7 +20,7 @@ func TestUserInfo(t *testing.T) {
 	}
 
 	clientId := "337"
-	resp, err := client.GetClientInfo(clientId)
+	resp, err := client.GetClient(clientId)
 	if err != nil {
 		log.Println(err)
 	}

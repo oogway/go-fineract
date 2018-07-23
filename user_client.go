@@ -17,7 +17,7 @@ type UserInfoResponse struct {
 	PhoneNumber string `json:"phoneNumber,omitempty"`
 }
 
-func (client *Client) GetClientInfo(clientId string) (*UserInfoResponse, error) {
+func (client *Client) GetClient(clientId string) (*UserInfoResponse, error) {
 	tempPath, _ := url.Parse(path.Join(clientsURL(), clientId))
 	path := client.HostName.ResolveReference(tempPath).String()
 
