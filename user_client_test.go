@@ -4,6 +4,10 @@ package fineract
 import (
 	"log"
 	"testing"
+
+	"strconv"
+
+	"github.com/bmizerany/assert"
 )
 
 func TestUserInfo(t *testing.T) {
@@ -16,10 +20,10 @@ func TestUserInfo(t *testing.T) {
 	}
 
 	clientId := "337"
-	resp, err := client.GetClientInfo(clientId)
+	resp, err := client.GetClient(clientId)
 	if err != nil {
 		log.Println(err)
 	}
 
-	log.Println(resp)
+	assert.Equal(t, strconv.Itoa(int(resp.Id)), clientId)
 }

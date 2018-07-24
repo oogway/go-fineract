@@ -1,19 +1,16 @@
 package fineract
 
 import (
-	"net/http"
-	"time"
 	"fmt"
+	"net/http"
+	"net/url"
+	"time"
 )
 
 const (
-	registeredTableName = "m_merchant"
 	officeId            = "1"
+	registeredTableName = "m_merchant"
 	defaultDateFormat   = "dd MMMM yyyy"
-)
-
-const (
-	createClientURL = "/fineract-provider/api/v1/clients?tenantIdentifier=default"
 )
 
 type ClientInfo struct {
@@ -21,13 +18,15 @@ type ClientInfo struct {
 	LastName       string    `json:"lastname"`
 	Active         bool      `json:"active"`
 	Locale         string    `json:"locale"`
-	MobileNo       string    `json:"mobileNo"`
+	CountryCode    string    `json:"_"`
+	PhoneNumber    string    `json:"_"`
 	SubmitDate     time.Time `json:"_"`
 	ActivationDate time.Time `json:"_"`
 }
 
 type createClientRequest struct {
 	*ClientInfo
+	MobileNo   string          `json:"mobileNo"`
 	OfficeID   string          `json:"officeId"`
 	DateFormat string          `json:"dateFormat"`
 	SubmitOn   string          `json:"submittedOnDate"`
@@ -45,8 +44,10 @@ type CreateClientResponse struct {
 }
 
 func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string, merchantName string) (*CreateClientResponse, error) {
+	// Store phone number in "<country-code>_<phone_number>"
 	request := &createClientRequest{
 		ClientInfo: clientInfo,
+		MobileNo:   fmt.Sprintf("%s_%s", clientInfo.CountryCode, clientInfo.PhoneNumber),
 		OfficeID:   officeId,
 		DateFormat: defaultDateFormat,
 		SubmitOn:   formatDate(clientInfo.SubmitDate),
@@ -61,10 +62,15 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 			},
 		},
 	}
+
 	var response CreateClientResponse
-	if err := client.MakeRequest(http.MethodPost, createClientURL, request, &response); err != nil {
+
+	tempPath, _ := url.Parse(clientsURL())
+	path := client.HostName.ResolveReference(tempPath).String()
+	if err := client.MakeRequest(http.MethodPost, path, request, &response); err != nil {
 		return nil, err
 	}
+
 	return &response, nil
 }
 
