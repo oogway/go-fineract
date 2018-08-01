@@ -228,6 +228,11 @@ type LoanRepayRequest struct {
 
 type LoanRepayResponse struct{}
 
+type LoanSearchResponse struct {
+	TotalFilteredRecords uint64             `json:"totalFilteredRecords"`
+	Loan                 []*GetLoanResponse `json:"pageItems"`
+}
+
 func (client *Client) LoanCreate(request *LoanCreateRequest) (*LoanCreateResponse, error) {
 	tempPath, _ := url.Parse("fineract-provider/api/v1/loans")
 	path := client.HostName.ResolveReference(tempPath).String()
@@ -273,6 +278,17 @@ func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanR
 		return nil, err
 	}
 
+	return response, nil
+}
+
+func (client *Client) GetLoanByExternalId(externalId string) (*LoanSearchResponse, error) {
+	tempPath, _ := url.Parse("fineract-provider/api/v1/loans?externalId=" + externalId)
+	path := client.HostName.ResolveReference(tempPath).String()
+	var response *LoanSearchResponse
+	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
+		log.Println("Error in geting the loan: ", err)
+		return nil, err
+	}
 	return response, nil
 }
 

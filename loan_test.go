@@ -58,4 +58,12 @@ func LoanSuite(t *testing.T, client *Client, loanProductId string) {
 		assert.Equal(t, penaltyCharge, true)
 		assert.Equal(t, serviceCharge, true)
 	})
+
+	t.Run("TestGetLoan by externalId", func(t *testing.T) {
+		resp, err := client.GetLoanByExternalId("243")
+		if err != nil {
+			t.Fatalf("Cannot get loan: %v", err)
+		}
+		assert.NotEqual(t, resp.TotalFilteredRecords, "1")
+	})
 }
