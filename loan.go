@@ -282,7 +282,10 @@ func (client *Client) GetLoan(loanId string, request *GetLoanRequest) (*GetLoanR
 }
 
 func (client *Client) GetLoanByExternalId(externalId string) (*LoanSearchResponse, error) {
-	tempPath, _ := url.Parse("fineract-provider/api/v1/loans?externalId=" + externalId)
+	tempPath, err := url.Parse("fineract-provider/api/v1/loans?externalId=" + externalId)
+	if err != nil {
+		return nil, err
+	}
 	path := client.HostName.ResolveReference(tempPath).String()
 	var response *LoanSearchResponse
 	if err := client.MakeRequest("GET", path, nil, &response); err != nil {
