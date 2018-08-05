@@ -15,3 +15,6 @@ test_user_info:
 
 test_user_client:
 	go test -v client_test.go client.go fineract_client.go fineract_mock_client.go common.go error.go fund.go
+
+test_kyc:
+	go test -v kycinfo_test.go kycinfo.go fineract_client.go fineract_mock_client.go common.go error.go fund.go
