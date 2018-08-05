@@ -8,7 +8,11 @@ type FineractError struct {
 }
 
 func (f *FineractError) Error() string {
-	return f.Code
+	msg, err := json.Marshal(f.Message)
+	if err != nil {
+		return f.Code
+	}
+	return f.Code + string(msg)
 }
 
 const (

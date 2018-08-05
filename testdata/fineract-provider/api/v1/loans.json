@@ -1,0 +1,132 @@
+{
+  "totalFilteredRecords": 1,
+  "pageItems": [
+    {
+      "id": 340,
+      "accountNo": "000000340",
+      "externalId": "243",
+      "status": {
+        "id": 100,
+        "code": "loanStatusType.submitted.and.pending.approval",
+        "value": "Submitted and pending approval",
+        "pendingApproval": true,
+        "waitingForDisbursal": false,
+        "active": false,
+        "closedObligationsMet": false,
+        "closedWrittenOff": false,
+        "closedRescheduled": false,
+        "closed": false,
+        "overpaid": false
+      },
+      "clientId": 1,
+      "clientAccountNo": "000000001",
+      "clientName": "Lending Fund 1",
+      "clientOfficeId": 2,
+      "loanProductId": 1,
+      "loanProductName": "One Month",
+      "loanProductDescription": "This loan is for one month",
+      "isLoanProductLinkedToFloatingRate": false,
+      "loanType": {
+        "id": 1,
+        "code": "accountType.individual",
+        "value": "Individual"
+      },
+      "currency": {
+        "code": "IDR",
+        "name": "Indonesian Rupiah",
+        "decimalPlaces": 2,
+        "inMultiplesOf": 0,
+        "nameCode": "currency.IDR",
+        "displayLabel": "Indonesian Rupiah [IDR]"
+      },
+      "principal": 1000,
+      "approvedPrincipal": 1000,
+      "proposedPrincipal": 1000,
+      "termFrequency": 1,
+      "termPeriodFrequencyType": {
+        "id": 2,
+        "code": "termFrequency.periodFrequencyType.months",
+        "value": "Months"
+      },
+      "numberOfRepayments": 1,
+      "repaymentEvery": 1,
+      "repaymentFrequencyType": {
+        "id": 2,
+        "code": "repaymentFrequency.periodFrequencyType.months",
+        "value": "Months"
+      },
+      "interestRatePerPeriod": 10,
+      "interestRateFrequencyType": {
+        "id": 2,
+        "code": "interestRateFrequency.periodFrequencyType.months",
+        "value": "Per month"
+      },
+      "annualInterestRate": 120,
+      "isFloatingInterestRate": false,
+      "amortizationType": {
+        "id": 0,
+        "code": "amortizationType.equal.principal",
+        "value": "Equal principal payments"
+      },
+      "interestType": {
+        "id": 0,
+        "code": "interestType.declining.balance",
+        "value": "Declining Balance"
+      },
+      "interestCalculationPeriodType": {
+        "id": 1,
+        "code": "interestCalculationPeriodType.same.as.repayment.period",
+        "value": "Same as repayment period"
+      },
+      "allowPartialPeriodInterestCalcualtion": false,
+      "transactionProcessingStrategyId": 1,
+      "transactionProcessingStrategyName": "Penalties, Fees, Interest, Principal order",
+      "syncDisbursementWithMeeting": false,
+      "timeline": {
+        "submittedOnDate": [
+          2018,
+          8,
+          1
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "expectedDisbursementDate": [
+          2018,
+          8,
+          2
+        ],
+        "expectedMaturityDate": [
+          2018,
+          9,
+          2
+        ]
+      },
+      "feeChargesAtDisbursementCharged": 0,
+      "multiDisburseLoan": false,
+      "canDefineInstallmentAmount": false,
+      "canDisburse": false,
+      "canUseForTopup": false,
+      "isTopup": false,
+      "closureLoanId": 0,
+      "inArrears": false,
+      "isNPA": false,
+      "daysInMonthType": {
+        "id": 1,
+        "code": "DaysInMonthType.actual",
+        "value": "Actual"
+      },
+      "daysInYearType": {
+        "id": 1,
+        "code": "DaysInYearType.actual",
+        "value": "Actual"
+      },
+      "isInterestRecalculationEnabled": false,
+      "createStandingInstructionAtDisbursement": false,
+      "isVariableInstallmentsAllowed": false,
+      "minimumGap": 0,
+      "maximumGap": 0,
+      "isEqualAmortization": false
+    }
+  ]
+}
