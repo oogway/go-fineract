@@ -1,0 +1,65 @@
+{
+  "id": 144,
+  "accountNo": "000000144",
+  "status": {
+    "id": 300,
+    "code": "clientStatusType.active",
+    "value": "Active"
+  },
+  "subStatus": {
+    "active": false,
+    "mandatory": false
+  },
+  "active": true,
+  "activationDate": [
+    2018,
+    5,
+    16
+  ],
+  "fullname": "TS-TOKO Fund 1",
+  "displayName": "TS-TOKO Fund 1",
+  "gender": {
+    "active": false,
+    "mandatory": false
+  },
+  "clientType": {
+    "active": false,
+    "mandatory": false
+  },
+  "clientClassification": {
+    "active": false,
+    "mandatory": false
+  },
+  "isStaff": false,
+  "officeId": 2,
+  "officeName": "TS-TOKO Fund Office",
+  "timeline": {
+    "submittedOnDate": [
+      2018,
+      5,
+      16
+    ],
+    "submittedByUsername": "mifos",
+    "submittedByFirstname": "App",
+    "submittedByLastname": "Administrator",
+    "activatedOnDate": [
+      2018,
+      5,
+      16
+    ],
+    "activatedByUsername": "mifos",
+    "activatedByFirstname": "App",
+    "activatedByLastname": "Administrator"
+  },
+  "groups": [],
+  "clientNonPersonDetails": {
+    "constitution": {
+      "active": false,
+      "mandatory": false
+    },
+    "mainBusinessLine": {
+      "active": false,
+      "mandatory": false
+    }
+  }
+}

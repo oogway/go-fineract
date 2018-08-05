@@ -1,0 +1,175 @@
+{
+  "savingsAccounts": [
+    {
+      "id": 3,
+      "accountNo": "000000003",
+      "productId": 1,
+      "productName": "Fund Principal",
+      "shortProductName": "FP",
+      "status": {
+        "id": 300,
+        "code": "savingsAccountStatusType.active",
+        "value": "Active",
+        "submittedAndPendingApproval": false,
+        "approved": false,
+        "rejected": false,
+        "withdrawnByApplicant": false,
+        "active": true,
+        "closed": false,
+        "prematureClosed": false,
+        "transferInProgress": false,
+        "transferOnHold": false,
+        "matured": false
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "inMultiplesOf": 0,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "accountBalance": 100000,
+      "accountType": {
+        "id": 1,
+        "code": "accountType.individual",
+        "value": "Individual"
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2018,
+          5,
+          16
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2018,
+          5,
+          16
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedOnDate": [
+          2018,
+          5,
+          16
+        ]
+      },
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "lastActiveTransactionDate": [
+        2018,
+        5,
+        18
+      ],
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      }
+    },
+    {
+      "id": 4,
+      "accountNo": "000000004",
+      "productId": 1,
+      "productName": "Fund Principal",
+      "shortProductName": "FP",
+      "status": {
+        "id": 600,
+        "code": "savingsAccountStatusType.closed",
+        "value": "Closed",
+        "submittedAndPendingApproval": false,
+        "approved": false,
+        "rejected": false,
+        "withdrawnByApplicant": false,
+        "active": false,
+        "closed": true,
+        "prematureClosed": false,
+        "transferInProgress": false,
+        "transferOnHold": false,
+        "matured": false
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "inMultiplesOf": 0,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "accountType": {
+        "id": 1,
+        "code": "accountType.individual",
+        "value": "Individual"
+      },
+      "timeline": {
+        "submittedOnDate": [
+          2018,
+          5,
+          16
+        ],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "approvedOnDate": [
+          2018,
+          5,
+          16
+        ],
+        "approvedByUsername": "mifos",
+        "approvedByFirstname": "App",
+        "approvedByLastname": "Administrator",
+        "activatedOnDate": [
+          2018,
+          5,
+          16
+        ],
+        "closedOnDate": [
+          2018,
+          5,
+          17
+        ],
+        "closedByUsername": "mifos",
+        "closedByFirstname": "App",
+        "closedByLastname": "Administrator"
+      },
+      "subStatus": {
+        "id": 0,
+        "code": "SavingsAccountSubStatusEnum.none",
+        "value": "None",
+        "none": true,
+        "inactive": false,
+        "dormant": false,
+        "escheat": false,
+        "block": false,
+        "blockCredit": false,
+        "blockDebit": false
+      },
+      "lastActiveTransactionDate": [
+        2018,
+        5,
+        16
+      ],
+      "depositType": {
+        "id": 100,
+        "code": "depositAccountType.savingsDeposit",
+        "value": "Savings"
+      }
+    }
+  ]
+}
