@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	fineractHost     = "https://localhost:8443" //"https://10.10.8.47:8443"
+	fineractHost     = "https://10.10.8.47:8443"
 	fineractUser     = "mifos"
 	fineractPassword = "password"
 )
