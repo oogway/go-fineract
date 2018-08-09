@@ -1,121 +1,231 @@
 package fineract
 
 import (
+	"math/rand"
 	"testing"
+	"time"
+
+	"log"
 
 	"github.com/bmizerany/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestClient_GetKycInfosByClientID(t *testing.T) {
+func TestSuiteMockKYC(t *testing.T) {
+	if !testing.Short() {
+		t.Skip("Skipped mock tests in long mode")
+	}
 	client, err := makeClient(true)
 	if err != nil {
 		t.Fatal(err)
 	}
-	kycsRes, err := client.GetKycInfosByClientID(&GetKycInfosByClientIDRequest{ClientID: 1})
-	kycs := kycsRes.KYCInfos
+
+	clientId := int64(3)
+	KycSuite(t, client, clientId, "18733")
+}
+
+func TestSuiteKYC(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipped integrated tests in short mode")
+	}
+	client, err := makeClient(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	clientReq := &ClientInfo{
+		FirstName:      "first name",
+		LastName:       "last name",
+		Active:         true,
+		Locale:         "en",
+		CountryCode:    "62",
+		PhoneNumber:    toString(random(81100200000, 81100249999)),
+		SubmitDate:     time.Now(),
+		ActivationDate: time.Now(),
+	}
+
+	merchantName := "toko"
+	merchantClientId := toString(random(11111111, 88888888))
+	response, err := client.CreateClient(clientReq, merchantClientId, merchantName)
+	require.Nil(t, err)
+	require.NotNil(t, response)
+
+	KycSuite(t, client, response.ID, toString(random(0, 99999)))
+	KycISuite(t, client, response.ID)
+}
+
+func KycISuite(t *testing.T, client *Client, clientId int64) {
+	fullName := "hung nguyen"
+	updatedName := fullName + " updated"
+
+	kycRes, err := client.GetKycInfosByClientID(&GetKycInfosByClientIDRequest{ClientID: clientId})
 	assert.Equal(t, nil, err)
-	assert.Equal(t, 2, len(kycs))
-	for _, kyc := range kycs {
-		assert.NotEqual(t, nil, kyc, "kyc should not be null")
+	if len(kycRes.KYCInfos) < 1 {
+		t.Fatal("one kyc record should be avaiable to update")
 	}
-	assert.Equal(t, kycs[0].ID, int64(8), "Incorrect ID")
-	assert.Equal(t, kycs[0].ClientID, int64(2), "Incorrect ClientID")
-	assert.Equal(t, kycs[0].FullName, "kyc full name 1", "Incorrect full name")
-	assert.Equal(t, kycs[0].NationalID, "123", "Incorrect national ID")
-	assert.Equal(t, kycs[0].HomeAddress, "kyc address", "Incorrect address")
-	assert.Equal(t, kycs[0].Gender, Gender(GenderMale), "Incorrect gender")
-	assert.Equal(t, kycs[0].DayOfBirth, "2018-07-02", "Incorrect dob")
-	assert.Equal(t, kycs[0].ExtraInfos, "{\"extraInfo\":\"extraInfo\"}", "Incorrect extra infos")
+	kyc := kycRes.KYCInfos[0]
+	kycId := kyc.ID
 
-	assert.Equal(t, kycs[1].ID, int64(9), "Incorrect ID")
-	assert.Equal(t, kycs[1].ClientID, int64(2), "Incorrect ClientID")
-	assert.Equal(t, kycs[1].FullName, "test name 2", "Incorrect full name")
-	assert.Equal(t, kycs[1].NationalID, "123456", "Incorrect national ID")
-	assert.Equal(t, kycs[1].HomeAddress, "address", "Incorrect address")
-	assert.Equal(t, kycs[1].Gender, Gender(GenderFemale), "Incorrect gender")
-	assert.Equal(t, kycs[1].DayOfBirth, "2018-07-01", "Incorrect dob")
-	assert.Equal(t, kycs[1].ExtraInfos, "{}", "Incorrect extra infos")
+	t.Run("TestUpdateKYCInfo ", func(t *testing.T) {
+		kyc := &KycInfoUpdateRequest{
+			ID:       kycId,
+			ClientID: clientId,
+			BaseKycInfo: BaseKycInfo{
+				FullName: updatedName,
+			},
+			DateFormat: "dd/MM/YYYY",
+		}
+		_, err := client.UpdateKYCInfo(kyc)
+		assert.Equal(t, err, nil, "Error should be nil")
+
+		kycRes, err := client.GetKycInfosByClientID(&GetKycInfosByClientIDRequest{ClientID: clientId})
+		assert.Equal(t, nil, err)
+		gKyc := kycRes.KYCInfos[0]
+		assert.Equal(t, clientId, gKyc.ClientID, "Incorrect ClientID")
+		assert.Equal(t, updatedName, gKyc.FullName, "Incorrect full name")
+	})
 }
 
-func TestClient_GetKycInfosByID(t *testing.T) {
-	client, err := makeClient(true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	kycsRes, err := client.GetKycInfoByID(&GetKycInfoByIDRequest{ClientID: 3, ID: 17})
-	kyc := kycsRes.KYCInfo
-	assert.Equal(t, nil, err)
-	assert.Equal(t, kyc != nil, true, "kyc should not be nil")
-	assert.Equal(t, kyc.ID, int64(17), "Incorrect ID")
-	assert.Equal(t, kyc.ClientID, int64(3), "Incorrect ClientID")
-	assert.Equal(t, kyc.FullName, "test name", "Incorrect full name")
-	assert.Equal(t, kyc.NationalID, "1234567", "Incorrect national ID")
-	assert.Equal(t, kyc.HomeAddress, "132 ham nghi", "Incorrect address")
-	assert.Equal(t, kyc.Gender, Gender(GenderMale), "Incorrect gender")
-	assert.Equal(t, kyc.DayOfBirth, "1988-07-01", "Incorrect dob")
-	assert.Equal(t, kyc.ExtraInfos, "{\"extraInfo\":\"extraInfo\"}", "Incorrect extra infos")
+func KycSuite(t *testing.T, client *Client, clientId int64, ktpNo string) {
+	var kycId int64
+	fullName := "hung nguyen"
+	doB := "27/12/1988"
+	formattedDoB := "1988-12-27"
+	faceSimilarity := 10.0
+	income := int64(100000)
+	ktpURL := "http://google.co.in"
+	selfieURL := "http://selfie-url.com"
+	occupation := "student"
+	postalCode := "411048"
+
+	t.Run("TestCreateKYCInfo", func(t *testing.T) {
+		kyc := &KycInfoCreateRequest{
+			BaseKycInfo: BaseKycInfo{
+				KtpUrl:           ktpURL,
+				KtpNo:            ktpNo,
+				SelfieUrl:        selfieURL,
+				FullName:         fullName,
+				Gender:           GenderMale,
+				DayOfBirth:       doB,
+				PlaceOfBirth:     "jakarta",
+				HomeAddress:      "home address",
+				MaritalStatus:    "kawin",
+				Rt:               "rt",
+				Rw:               "rw",
+				Village:          "village",
+				District:         "district",
+				DomicileAddress:  "address",
+				DomicileRt:       "rt",
+				DomicileRw:       "rw",
+				DomicileVillage:  "village",
+				DomicileDistrict: "district",
+				PostalCode:       postalCode,
+				Income:           income,
+				Occupation:       occupation,
+				UserEmail:        "abc@def.com",
+				UserMsisdn:       "81100200000",
+				UserId:           "id",
+				FaceSimilarity:   faceSimilarity,
+				NationalID:       "123456789",
+				Locale:           "en",
+			},
+			ClientID:   clientId,
+			DateFormat: "dd/MM/YYYY",
+		}
+		res, err := client.CreateKYCInfo(kyc)
+		if err != nil {
+			log.Println(err)
+			t.Fatal("kyc creation failed")
+		}
+		assert.Equal(t, err, nil, "Error should be nil")
+		assert.Equal(t, res.ClientID, clientId, "Incorrect clientID")
+	})
+
+	t.Run("TestGetKycInfosByClientID", func(t *testing.T) {
+		kycRes, err := client.GetKycInfosByClientID(&GetKycInfosByClientIDRequest{ClientID: clientId})
+		log.Println(err)
+		log.Println(kycRes)
+		assert.Equal(t, nil, err)
+		//assert.Equal(t, 1, len(kycRes.KYCInfos), "one kyc record should be fetched")
+		kyc := kycRes.KYCInfos[0]
+		assert.Equal(t, clientId, kyc.ClientID, "Incorrect ClientID")
+		assert.Equal(t, fullName, kyc.FullName, "Incorrect full name")
+		assert.Equal(t, ktpNo, kyc.KtpNo, "recorded ktp no doesnt match")
+		assert.Equal(t, formattedDoB, kyc.DayOfBirth, "Date of Birth doesnt match")
+		assert.Equal(t, faceSimilarity, kyc.FaceSimilarity)
+		assert.Equal(t, income, kyc.Income)
+		assert.Equal(t, Gender(GenderMale), kyc.Gender, "Incorrect gender")
+		assert.Equal(t, ktpURL, kyc.KtpUrl)
+		assert.Equal(t, selfieURL, kyc.SelfieUrl)
+		assert.Equal(t, occupation, kyc.Occupation, "occupation doesnot match")
+		assert.Equal(t, postalCode, kyc.PostalCode, "postalCode doesnot match")
+
+		kycId = kyc.ID
+	})
+
+	t.Run("TestCreateKYCInfo:Add another KYC for this client", func(t *testing.T) {
+		kyc := &KycInfoCreateRequest{
+			BaseKycInfo: BaseKycInfo{
+				KtpUrl:           ktpURL,
+				KtpNo:            ktpNo,
+				SelfieUrl:        selfieURL,
+				FullName:         fullName,
+				Gender:           GenderMale,
+				DayOfBirth:       doB,
+				PlaceOfBirth:     "jakarta",
+				HomeAddress:      "home address",
+				MaritalStatus:    "kawin",
+				Rt:               "rt",
+				Rw:               "rw",
+				Village:          "village",
+				District:         "district",
+				DomicileAddress:  "address",
+				DomicileRt:       "rt",
+				DomicileRw:       "rw",
+				DomicileVillage:  "village",
+				DomicileDistrict: "district",
+				PostalCode:       postalCode,
+				Income:           income,
+				Occupation:       occupation,
+				UserEmail:        "abc@def.com",
+				UserMsisdn:       "81100200000",
+				UserId:           "id",
+				FaceSimilarity:   faceSimilarity,
+				NationalID:       "123456789",
+				Locale:           "en",
+			},
+			ClientID:   clientId,
+			DateFormat: "dd/MM/YYYY",
+		}
+		res, err := client.CreateKYCInfo(kyc)
+		if err != nil {
+			log.Println(err)
+			t.Fatal("kyc creation failed")
+		}
+		assert.Equal(t, err, nil, "Error should be nil")
+		assert.Equal(t, res.ClientID, clientId, "Incorrect clientID")
+	})
+
+	t.Run("TestGetKycInfosByClientID for multiple kycs", func(t *testing.T) {
+		kycRes, err := client.GetKycInfosByClientID(&GetKycInfosByClientIDRequest{ClientID: clientId})
+		assert.Equal(t, nil, err)
+		assert.Equal(t, 2, len(kycRes.KYCInfos), "two kyc records should be fetched")
+		kyc := kycRes.KYCInfos[1]
+		assert.Equal(t, clientId, kyc.ClientID, "Incorrect ClientID")
+		assert.Equal(t, fullName, kyc.FullName, "Incorrect full name")
+		assert.Equal(t, ktpNo, kyc.KtpNo, "recorded ktp no doesnt match")
+		assert.Equal(t, formattedDoB, kyc.DayOfBirth, "Date of Birth doesnt match")
+		assert.Equal(t, faceSimilarity, kyc.FaceSimilarity)
+		assert.Equal(t, income, kyc.Income)
+		assert.Equal(t, Gender(GenderMale), kyc.Gender, "Incorrect gender")
+		assert.Equal(t, ktpURL, kyc.KtpUrl)
+		assert.Equal(t, selfieURL, kyc.SelfieUrl)
+		assert.Equal(t, occupation, kyc.Occupation, "occupation doesnot match")
+		assert.Equal(t, postalCode, kyc.PostalCode, "postalCode doesnot match")
+	})
 }
 
-func TestClient_GetKycInfosByIDWithNotExistedID(t *testing.T) {
-	client, err := makeClient(true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	kycsRes, err := client.GetKycInfoByID(&GetKycInfoByIDRequest{ClientID: 3, ID: 18})
-	kyc := kycsRes.KYCInfo
-	assert.Equal(t, nil, err)
-	assert.Equal(t, kyc == nil, true, "kyc should not be nil")
-}
-
-func TestClient_CreateKYCInfo(t *testing.T) {
-	client, err := makeClient(true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	kyc := &KycInfoCreateRequest{
-		BaseKycInfo: BaseKycInfo{
-			FullName:    "hung nguyen",
-			ExtraInfos:  "{}",
-			Gender:      GenderMale,
-			NationalID:  "123456789",
-			HomeAddress: "home address",
-			DayOfBirth:  "27/12/1988",
-			Locale:      "en",
-		},
-		ClientID:   3,
-		DateFormat: "dd/MM/YYYY",
-	}
-	res, err := client.CreateKYCInfo(kyc)
-	assert.Equal(t, err, nil, "Error should be nil")
-	assert.Equal(t, res.OfficeID, int64(1), "Incorrect officeID")
-	assert.Equal(t, res.ClientID, int64(3), "Incorrect clientID")
-	assert.Equal(t, res.ResourceID, int64(3), "Incorrect resourceID")
-
-}
-
-func TestClient_UpdateKYCInfo(t *testing.T) {
-	client, err := makeClient(true)
-	if err != nil {
-		t.Fatal(err)
-	}
-	kyc := &KycInfoUpdateRequest{
-		ID:       16,
-		ClientID: 3,
-		BaseKycInfo: BaseKycInfo{
-			FullName:    "hung nguyen new name 123",
-			ExtraInfos:  "{}",
-			Gender:      GenderMale,
-			NationalID:  "123456789",
-			HomeAddress: "home address",
-			DayOfBirth:  "27/12/1988",
-			Locale:      "en",
-		},
-		DateFormat: "dd/MM/YYYY",
-	}
-	res, err := client.UpdateKYCInfo(kyc)
-	assert.Equal(t, err, nil, "Error should be nil")
-	assert.Equal(t, res.OfficeID, int64(1), "Incorrect officeID")
-	assert.Equal(t, res.ClientID, int64(3), "Incorrect clientID")
-	assert.Equal(t, res.ResourceID, int64(3), "Incorrect resourceID")
-
+func random(min, max int) uint64 {
+	rand.Seed(time.Now().Unix())
+	return uint64(rand.Intn(max-min) + min)
 }
