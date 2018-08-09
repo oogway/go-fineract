@@ -26,9 +26,6 @@ func BasicAuth(username, password string) string {
 
 func (client *Client) MakeRequest(reqType, url string, payload interface{}, response interface{}) error {
 	b, err := json.Marshal(payload)
-	log.Println(reqType)
-	log.Println(url)
-	log.Println(string(b))
 	if err != nil {
 		log.Println(err)
 		rawMessage := json.RawMessage([]byte(err.Error()))
@@ -57,7 +54,7 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Println(string(body))
+	//log.Println(string(body))
 	//log.Println(resp.StatusCode)
 	//log.Println("------------------")
 	if resp.StatusCode != 200 {
