@@ -32,6 +32,7 @@ type createClientRequest struct {
 	SubmitOn   string          `json:"submittedOnDate"`
 	ActivateOn string          `json:"activationDate"`
 	DataTables []dataTableInfo `json:"datatables"`
+	Address    []Address       `json:"address"`
 }
 
 type dataTableInfo struct {
@@ -61,6 +62,7 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 				},
 			},
 		},
+		Address: []Address{},
 	}
 
 	var response CreateClientResponse

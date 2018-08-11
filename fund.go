@@ -275,7 +275,7 @@ func (client *Client) GetFundAccountId(fundId string) (*FundAccountId, error) {
 			fundAccountId.InterestAccountId = toString(cursor.Id)
 		} else if cursor.Status.Value == active && cursor.ProductName == toString(Promise) {
 			fundAccountId.PromiseAccountId = toString(cursor.Id)
-		} 
+		}
 		if fundAccountId.PrincipalAccountId != "" && fundAccountId.InterestAccountId != "" && fundAccountId.PromiseAccountId != "" {
 			break
 		}
@@ -294,6 +294,10 @@ func fundsURLParams(officeId string) string {
 
 func clientsURL() string {
 	return path.Join(baseURL, "clients")
+}
+
+func clientURL() string {
+	return path.Join(baseURL, "client")
 }
 
 func paymentTypesURL() string {
