@@ -8,9 +8,11 @@ import (
 )
 
 const (
-	officeId            = "1"
-	registeredTableName = "m_merchant"
-	defaultDateFormat   = "dd MMMM yyyy"
+	officeId               = "1"
+	registeredTableName    = "m_merchant"
+	defaultDateFormat      = "dd MMMM yyyy"
+	clientDetailsTableName = "m_client_details"
+	locale                 = "en"
 )
 
 type ClientInfo struct {
@@ -22,6 +24,10 @@ type ClientInfo struct {
 	PhoneNumber    string    `json:"_"`
 	SubmitDate     time.Time `json:"_"`
 	ActivationDate time.Time `json:"_"`
+	DeclaredIncome int64     `json:"-"`
+	Occupation     string    `json:"-"`
+	Email          string    `json:"-"`
+	Address        []Address `json:"-"`
 }
 
 type createClientRequest struct {
@@ -46,6 +52,9 @@ type CreateClientResponse struct {
 
 func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string, merchantName string) (*CreateClientResponse, error) {
 	// Store phone number in "<country-code>_<phone_number>"
+	if clientInfo.Address == nil {
+		clientInfo.Address = []Address{}
+	}
 	request := &createClientRequest{
 		ClientInfo: clientInfo,
 		MobileNo:   fmt.Sprintf("%s_%s", clientInfo.CountryCode, clientInfo.PhoneNumber),
@@ -61,8 +70,17 @@ func (client *Client) CreateClient(clientInfo *ClientInfo, merchantUserID string
 					"merchant_user_id": merchantUserID,
 				},
 			},
+			{
+				TableName: clientDetailsTableName,
+				Data: map[string]string{
+					"declared_income": toString(clientInfo.DeclaredIncome),
+					"occupation":      clientInfo.Occupation,
+					"locale":          locale,
+					"email":           clientInfo.Email,
+				},
+			},
 		},
-		Address: []Address{},
+		Address: clientInfo.Address,
 	}
 
 	var response CreateClientResponse

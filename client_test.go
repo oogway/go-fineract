@@ -7,23 +7,55 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreateClient(t *testing.T) {
-	client, err := makeClient(true)
-	require.Nil(t, err)
-
-	clientReq := &ClientInfo{
-		FirstName:      "first name",
-		LastName:       "last name",
-		Active:         true,
-		Locale:         "en",
-		CountryCode:    "62",
-		PhoneNumber:    "8123123",
-		SubmitDate:     time.Now(),
-		ActivationDate: time.Now(),
+func TestSuiteMockClient(t *testing.T) {
+	if !testing.Short() {
+		t.Skip("Skipped mock tests in long mode")
 	}
+	client, err := makeClient(true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ClientSuite(t, client)
+}
 
-	response, err := client.CreateClient(clientReq, "merchant_user_id", "merchant_name")
-	require.Nil(t, err)
-	require.NotNil(t, response)
-	require.Equal(t, int64(1001), response.ID)
+func TestSuiteClient(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipped integrated tests in short mode")
+	}
+	client, err := makeClient(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ClientSuite(t, client)
+	ClientISuite(t, client)
+}
+
+func ClientISuite(t *testing.T, client *Client) {
+
+}
+
+func ClientSuite(t *testing.T, client *Client) {
+	t.Run("TestCreateClient", func(t *testing.T) {
+
+		clientReq := &ClientInfo{
+			FirstName:      "first name",
+			LastName:       "last name",
+			Active:         true,
+			Locale:         "en",
+			CountryCode:    "62",
+			PhoneNumber:    toString(random(81100200000, 81100249999)),
+			SubmitDate:     time.Now(),
+			ActivationDate: time.Now(),
+			DeclaredIncome: 10000,
+			Occupation:     "student",
+			Email:          "abc@gmail.com",
+		}
+
+		response, err := client.CreateClient(clientReq, toString(random(0, 99999)), "toko")
+		if err != nil {
+			t.Fatalf(err.Error())
+		}
+		require.NotNil(t, response)
+		require.NotNil(t, response.ID)
+	})
 }

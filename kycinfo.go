@@ -1,7 +1,6 @@
 package fineract
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -33,38 +32,28 @@ type KycInfoUpdateRequest struct {
 }
 
 type BaseKycInfo struct {
-	KtpUrl        string `json:"ktp_url,omitempty"`
-	KtpNo         string `json:"ktp_no,omitempty"`
-	SelfieUrl     string `json:"selfie_url,omitempty"`
-	FullName      string `json:"full_name,omitempty"`
-	Gender        Gender `json:"-"`
-	GenderCode    int64  `json:"Gender_cd_gender,omitempty"`
-	DayOfBirth    string `json:"date_of_birth,omitempty"`
-	PlaceOfBirth  string `json:"place_of_birth,omitempty"`
-	HomeAddress   string `json:"home_address,omitempty"`
-	MaritalStatus string `json:"marital_status,omitempty"`
-	Rt            string `json:"rt,omitempty"`
-	Rw            string `json:"rw,omitempty"`
-	Village       string `json:"village,omitempty"`
-	District      string `json:"district,omitempty"`
-	//TODO: Add domicile_same field
-	DomicileAddress  string  `json:"domicile_address,omitempty"`
-	DomicileRt       string  `json:"domicile_rt,omitempty"`
-	DomicileRw       string  `json:"domicile_rw,omitempty"`
-	DomicileVillage  string  `json:"domicile_village,omitempty"`
-	DomicileDistrict string  `json:"domicile_district,omitempty"`
-	PostalCode       string  `json:"postal_code,omitempty"`
-	Income           int64   `json:"income,omitempty"`
-	Occupation       string  `json:"occupation,omitempty"`
-	UserEmail        string  `json:"user_email,omitempty"`
-	UserMsisdn       string  `json:"user_msisdn,omitempty"`
-	UserId           string  `json:"user_id,omitempty"`
-	FaceSimilarity   float64 `json:"face_similarity,omitempty"`
-	NationalID       string  `json:"national_id,omitempty"`
-	Locale           string  `json:"locale"`
-	ExtraInfos       string  `json:"extra_infos"`
+	DocumentType   string    `json:"document_type"`
+	DocumentID     string    `json:"document_id,omitempty"`
+	DocumentUrl    string    `json:"document_url,omitempty"`
+	SelfieUrl      string    `json:"selfie_url,omitempty"`
+	BirthDate      string    `json:"birth_date,omitempty"`
+	BirthPlace     string    `json:"birth_place,omitempty"`
+	MaritalStatus  string    `json:"marital_status,omitempty"`
+	FullName       string    `json:"full_name,omitempty"`
+	Gender         Gender    `json:"-"`
+	GenderCode     int64     `json:"Gender_cd_gender,omitempty"`
+	FaceSimilarity float64   `json:"face_similarity,omitempty"`
+	Locale         string    `json:"locale"`
+	ExtraInfos     string    `json:"extra_infos"`
+	Address        []Address `json:"-"`
 }
 
+/*
+Income     int64  `json:"declared_income,omitempty"`
+Occupation string `json:"occupation,omitempty"`
+Email      string `json:"email,omitempty"`
+
+*/
 type Gender string
 
 const (
@@ -178,9 +167,7 @@ func (client *Client) GetKycInfoByID(r *GetKycInfoByIDRequest) (*GetKycInfoByIDR
 
 // Create KYC info
 func (client *Client) CreateKYCInfo(r *KycInfoCreateRequest) (*CreateKycInfoResponse, error) {
-	if r.ExtraInfos == "" {
-		r.ExtraInfos = "none"
-	}
+	//Update in m_kyc table
 	if r.Locale == "" {
 		r.Locale = "en"
 	}
@@ -195,14 +182,25 @@ func (client *Client) CreateKYCInfo(r *KycInfoCreateRequest) (*CreateKycInfoResp
 	if err != nil {
 		return nil, err
 	}
+
+	//add address to m_address table
+	for _, address := range r.Address {
+		req := CreateAddressRequest{
+			AddressTypeCode: address.Type,
+			ClientId:        toString(r.ClientID),
+			Address:         address,
+		}
+
+		if _, err := client.CreateAddress(&req); err != nil {
+			return nil, err
+		}
+	}
+
 	return response, nil
 }
 
 // Update KYC info
 func (client *Client) UpdateKYCInfo(r *KycInfoUpdateRequest) (*CreateKycInfoResponse, error) {
-	if r.ExtraInfos == "" {
-		r.ExtraInfos = "none"
-	}
 	if r.Locale == "" {
 		r.Locale = "en"
 	}
@@ -234,7 +232,7 @@ func (client *Client) rowToKYC(row []interface{}) (*KycInfo, error) {
 		return nil, err
 	}
 
-	income := int64(0)
+	/*income := int64(0)
 	faceSimilarity := 0.0
 
 	if row[22].(string) != "" {
@@ -248,38 +246,38 @@ func (client *Client) rowToKYC(row []interface{}) (*KycInfo, error) {
 		if err != nil {
 			return nil, errors.New("Failed to parse faceSimilarity as float: " + err.Error())
 		}
-	}
+	}*/
 
-	genderCode, err := strconv.ParseInt(row[6].(string), 10, 8)
+	//genderCode, err := strconv.ParseInt(row[6].(string), 10, 8)
 	kycInfo := &KycInfo{
 		BaseKycInfo: BaseKycInfo{
-			KtpUrl:           row[2].(string),
-			KtpNo:            row[3].(string),
-			SelfieUrl:        row[4].(string),
-			FullName:         row[5].(string),
-			Gender:           fromCode(genderCode),
-			DayOfBirth:       row[7].(string),
-			PlaceOfBirth:     row[8].(string),
-			HomeAddress:      row[9].(string),
-			MaritalStatus:    row[10].(string),
-			Rt:               row[11].(string),
-			Rw:               row[12].(string),
-			Village:          row[13].(string),
-			District:         row[14].(string),
-			DomicileAddress:  row[16].(string),
-			DomicileRt:       row[17].(string),
-			DomicileRw:       row[18].(string),
-			DomicileVillage:  row[19].(string),
-			DomicileDistrict: row[20].(string),
-			PostalCode:       row[21].(string),
-			Income:           income,
-			Occupation:       row[23].(string),
-			UserEmail:        row[24].(string),
-			UserMsisdn:       row[25].(string),
-			UserId:           row[26].(string),
-			FaceSimilarity:   faceSimilarity,
-			NationalID:       row[28].(string),
-			ExtraInfos:       row[29].(string),
+			/*	KtpUrl:           row[2].(string),
+				KtpNo:            row[3].(string),
+				SelfieUrl:        row[4].(string),
+				FullName:         row[5].(string),
+				Gender:           fromCode(genderCode),
+				DayOfBirth:       row[7].(string),
+				PlaceOfBirth:     row[8].(string),
+				HomeAddress:      row[9].(string),
+				MaritalStatus:    row[10].(string),
+				Rt:               row[11].(string),
+				Rw:               row[12].(string),
+				Village:          row[13].(string),
+				District:         row[14].(string),
+				DomicileAddress:  row[16].(string),
+				DomicileRt:       row[17].(string),
+				DomicileRw:       row[18].(string),
+				DomicileVillage:  row[19].(string),
+				DomicileDistrict: row[20].(string),
+				PostalCode:       row[21].(string),
+				Income:           income,
+				Occupation:       row[23].(string),
+				UserEmail:        row[24].(string),
+				UserMsisdn:       row[25].(string),
+				UserId:           row[26].(string),
+				FaceSimilarity:   faceSimilarity,
+				NationalID:       row[28].(string),
+				ExtraInfos:       row[29].(string),*/
 		},
 		ID:       ID,
 		ClientID: clientID,
