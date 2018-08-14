@@ -109,7 +109,7 @@ func KycSuite(t *testing.T, client *Client, clientId int64, ktpNo string) {
 		}
 		kyc := &KycInfoCreateRequest{
 			BaseKycInfo: BaseKycInfo{
-				DocumentType:   "KTP",
+				DocumentType:   "1",
 				DocumentUrl:    ktpURL,
 				DocumentID:     ktpNo,
 				SelfieUrl:      selfieURL,
@@ -117,7 +117,7 @@ func KycSuite(t *testing.T, client *Client, clientId int64, ktpNo string) {
 				Gender:         GenderMale,
 				BirthDate:      doB,
 				BirthPlace:     "jakarta",
-				MaritalStatus:  "kawin",
+				MaritalStatus:  "16",
 				FaceSimilarity: faceSimilarity,
 				Locale:         "en",
 				Address:        []Address{add},

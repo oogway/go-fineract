@@ -32,13 +32,13 @@ type KycInfoUpdateRequest struct {
 }
 
 type BaseKycInfo struct {
-	DocumentType   string    `json:"document_type"`
+	DocumentType   string    `json:"Customer Identifier_cd_id"`
 	DocumentID     string    `json:"document_id,omitempty"`
 	DocumentUrl    string    `json:"document_url,omitempty"`
 	SelfieUrl      string    `json:"selfie_url,omitempty"`
 	BirthDate      string    `json:"birth_date,omitempty"`
 	BirthPlace     string    `json:"birth_place,omitempty"`
-	MaritalStatus  string    `json:"marital_status,omitempty"`
+	MaritalStatus  string    `json:"MARITAL STATUS_cd_id,omitempty"`
 	FullName       string    `json:"full_name,omitempty"`
 	Gender         Gender    `json:"-"`
 	GenderCode     int64     `json:"Gender_cd_gender,omitempty"`
