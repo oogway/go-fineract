@@ -33,6 +33,10 @@ type CreateAddressRequest struct {
 type CreateAddressResponse struct{}
 
 func (client *Client) CreateAddress(r *CreateAddressRequest) (*CreateAddressResponse, error) {
+	//street is mandatory
+	if r.Address.Street == "" {
+		r.Address.Street = "NA"
+	}
 	tempPath, err := url.Parse(clientAddressURL(r.ClientId) + "?type=" + r.AddressTypeCode)
 	if err != nil {
 		return nil, err

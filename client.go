@@ -16,6 +16,7 @@ const (
 )
 
 type ClientInfo struct {
+	ExternalId     string    `json:"externalId"`
 	FirstName      string    `json:"firstname"`
 	LastName       string    `json:"lastname"`
 	Active         bool      `json:"active"`
