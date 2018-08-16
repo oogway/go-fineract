@@ -40,6 +40,6 @@ func (m *MockTransport) getResponseFromFile(filePath string) (*http.Response, er
 }
 
 func random(min, max int) uint64 {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 	return uint64(rand.Intn(max-min) + min)
 }

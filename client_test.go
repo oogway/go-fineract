@@ -4,6 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"log"
+
+	"github.com/bmizerany/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,11 +34,8 @@ func TestSuiteClient(t *testing.T) {
 }
 
 func ClientISuite(t *testing.T, client *Client) {
-
-}
-
-func ClientSuite(t *testing.T, client *Client) {
-	t.Run("TestCreateClient", func(t *testing.T) {
+	t.Run("TestCreateClient: 2 requests with same custId returns same fi-clientId", func(t *testing.T) {
+		custId := toString(random(1, 999))
 
 		clientReq := &ClientInfo{
 			FirstName:      "first name",
@@ -49,6 +49,59 @@ func ClientSuite(t *testing.T, client *Client) {
 			DeclaredIncome: 10000,
 			Occupation:     "student",
 			Email:          "abc@gmail.com",
+			ExternalId:     toString(random(1, 999)),
+		}
+
+		fResponse, err := client.CreateClient(clientReq, custId, "toko")
+		require.Nil(t, err)
+
+		sResponse, err := client.CreateClient(clientReq, custId, "toko")
+		require.Nil(t, err)
+
+		assert.Equal(t, fResponse.ID, sResponse.ID, "new client got created despite supplying same merchant customerID")
+	})
+
+	t.Run("TestCreateClient: 2 requests with same externalId returns error", func(t *testing.T) {
+		externalId := toString(random(1, 999))
+
+		clientReq := &ClientInfo{
+			FirstName:      "first name",
+			LastName:       "last name",
+			Active:         true,
+			Locale:         "en",
+			CountryCode:    "62",
+			PhoneNumber:    toString(random(81100200000, 81100249999)),
+			SubmitDate:     time.Now(),
+			ActivationDate: time.Now(),
+			DeclaredIncome: 10000,
+			Occupation:     "student",
+			Email:          "abc@gmail.com",
+			ExternalId:     externalId,
+		}
+
+		_, err := client.CreateClient(clientReq, toString(random(1, 999)), "toko")
+		require.Nil(t, err)
+
+		_, err = client.CreateClient(clientReq, toString(random(1, 999)), "toko")
+		assert.NotEqual(t, nil, err, "duplicate customer creation with same externalId should have failed")
+	})
+}
+
+func ClientSuite(t *testing.T, client *Client) {
+	t.Run("TestCreateClient", func(t *testing.T) {
+		clientReq := &ClientInfo{
+			FirstName:      "first name",
+			LastName:       "last name",
+			Active:         true,
+			Locale:         "en",
+			CountryCode:    "62",
+			PhoneNumber:    toString(random(81100200000, 81100249999)),
+			SubmitDate:     time.Now(),
+			ActivationDate: time.Now(),
+			DeclaredIncome: 10000,
+			Occupation:     "student",
+			Email:          "abc@gmail.com",
+			ExternalId:     toString(random(1111, 9999)),
 		}
 
 		response, err := client.CreateClient(clientReq, toString(random(0, 99999)), "toko")
@@ -57,5 +110,6 @@ func ClientSuite(t *testing.T, client *Client) {
 		}
 		require.NotNil(t, response)
 		require.NotNil(t, response.ID)
+		log.Println(response.ID)
 	})
 }
