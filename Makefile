@@ -31,3 +31,9 @@ test_kyc:
 
 test_kyc_full:
 	go test -v kycinfo_test.go kycinfo.go address.go  fineract_client.go fineract_mock_client.go error.go common.go fund.go fineract_client_test.go client.go
+
+test_address:
+	go test -v -short address_test.go address.go  fineract_client.go fineract_mock_client.go error.go common.go fund.go fineract_client_test.go client.go
+
+test_address_full:
+	go test -v address_test.go address.go  fineract_client.go fineract_mock_client.go error.go common.go fund.go fineract_client_test.go client.go
