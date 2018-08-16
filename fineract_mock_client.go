@@ -1,11 +1,13 @@
 package fineract
 
 import (
+	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path"
-	"fmt"
+	"time"
 )
 
 type MockTransport struct {
@@ -35,4 +37,9 @@ func (m *MockTransport) getResponseFromFile(filePath string) (*http.Response, er
 		StatusCode: http.StatusOK,
 	}
 	return resp, nil
+}
+
+func random(min, max int) uint64 {
+	rand.Seed(time.Now().UnixNano())
+	return uint64(rand.Intn(max-min) + min)
 }
