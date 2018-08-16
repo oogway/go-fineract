@@ -103,9 +103,9 @@ func KycSuite(t *testing.T, client *Client, clientId int64, ktpNo string) {
 			AddressLine2: "No. 1, Gambir",
 			AddressLine3: "014/002",
 			City:         "Central Jakarta City",
-			Country:      "27",
+			Country:      "24",
 			PostalCode:   "10110",
-			Type:         "25",
+			Type:         "22",
 		}
 		kyc := &KycInfoCreateRequest{
 			BaseKycInfo: BaseKycInfo{
