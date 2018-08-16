@@ -18,8 +18,8 @@ func TestSuiteMockAddress(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	clientId := "144"
-	Suite(t, client, clientId)
+	clientId := "3"
+	SuiteAddress(t, client, clientId)
 }
 
 func TestSuiteAddress(t *testing.T) {
