@@ -57,11 +57,11 @@ func SuiteAddress(t *testing.T, client *Client, clientId string) {
 			AddressLine2: "No. 1, Gambir",
 			AddressLine3: "014/002",
 			City:         "Central Jakarta City",
-			Country:      "28",
+			Country:      "24",
 			PostalCode:   "10110",
 		}
 		req := CreateAddressRequest{
-			AddressTypeCode: "29",
+			AddressTypeCode: "22",
 			ClientId:        clientId,
 			Address:         add,
 		}
