@@ -62,7 +62,7 @@ const (
 )
 
 func fromCode(code int64) Gender {
-	if code == 25 {
+	if code == 24 {
 		return GenderMale
 	}
 	return GenderFemale
@@ -70,9 +70,9 @@ func fromCode(code int64) Gender {
 
 func fromGender(gender Gender) int64 {
 	if gender == GenderMale {
-		return 25
+		return 24
 	}
-	return 26
+	return 25
 }
 
 type GetKycInfoByIDRequest struct {
