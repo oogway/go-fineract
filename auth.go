@@ -21,7 +21,7 @@ type AuthRequest struct {
 	Password string
 }
 
-func (client *Client) auth(r *AuthRequest) (*AuthResponse, error) {
+func (client *Client) Auth(r *AuthRequest) (*AuthResponse, error) {
 	if r.Username == "" || r.Password == "" {
 		return nil, fmt.Errorf("username and password can not be empty")
 	}

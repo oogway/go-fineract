@@ -23,7 +23,7 @@ func AuthSuite(t *testing.T, client *Client) {
 			Password: "mifos",
 		}
 
-		response, err := client.auth(authReq)
+		response, err := client.Auth(authReq)
 		if err != nil {
 			t.Fatalf(err.Error())
 		}
