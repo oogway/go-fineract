@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-type ChargeDetail struct {
+type ClientCharge struct {
 	Id                uint64    `json:"id"`
 	ChargeId          uint64    `json:"chargeId"`
 	Name              string    `json:"name"`
@@ -20,6 +20,7 @@ type ChargeDetail struct {
 	Active            bool      `json:"isActive"`
 	Paid              bool      `json:"isPaid"`
 }
+
 
 type chargeResponse struct {
 	ResourceID int64 `json:"resourceId"`
@@ -45,10 +46,10 @@ func (client *Client) AddChargeToClient(clientID string, chargeID string, dueDat
 }
 
 type clientChargesResponse struct {
-	Items []*ChargeDetail `json:"pageItems"`
+	Items []*ClientCharge `json:"pageItems"`
 }
 
-func (client *Client) GetClientCharges(clientID string, offset int, limit int) ([]*ChargeDetail, error) {
+func (client *Client) GetClientCharges(clientID string, offset int, limit int) ([]*ClientCharge, error) {
 	tempPath, _ := url.Parse(path.Join(clientsURL(), clientID, "charges"))
 	queryValues := tempPath.Query()
 	queryValues.Add("offset", fmt.Sprintf("%d", offset))
