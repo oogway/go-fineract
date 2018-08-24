@@ -9,8 +9,8 @@ import (
 )
 
 type ChargeDetail struct {
-	Id                uint32    `json:"id"`
-	ChargeId          uint32    `json:"chargeId"`
+	Id                uint64    `json:"id"`
+	ChargeId          uint64    `json:"chargeId"`
 	Name              string    `json:"name"`
 	DueDate           []uint32  `json:"dueDate"`
 	Amount            float64   `json:"amount"`
