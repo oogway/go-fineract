@@ -1,0 +1,43 @@
+{
+  "totalFilteredRecords": 1,
+  "pageItems": [
+    {
+      "id": 2,
+      "clientId": 100,
+      "chargeId": 2,
+      "name": "VCC Interest Charge",
+      "chargeTimeType": {
+        "id": 7,
+        "code": "chargeTimeType.monthlyFee",
+        "value": "Monthly Fee"
+      },
+      "dueDate": [
+        2015,
+        8,
+        17
+      ],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 100.000000,
+      "amountPaid": 0,
+      "amountWaived": 100.000000,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 0.000000,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": true
+    }
+  ]
+}
