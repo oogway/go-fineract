@@ -311,3 +311,7 @@ func savingsAccountsURL() string {
 func headOfficeURL() string {
 	return path.Join(baseURL, "offices")
 }
+
+func chargesURL() string {
+	return path.Join(baseURL, "charges")
+}

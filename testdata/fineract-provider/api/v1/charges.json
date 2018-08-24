@@ -1,0 +1,105 @@
+[
+  {
+    "id": 2,
+    "name": "Client Charge",
+    "active": true,
+    "penalty": false,
+    "currency": {
+      "code": "USD",
+      "name": "US Dollar",
+      "decimalPlaces": 2,
+      "displaySymbol": "$",
+      "nameCode": "currency.USD",
+      "displayLabel": "US Dollar ($)"
+    },
+    "amount": 100000.000000,
+    "chargeTimeType": {
+      "id": 2,
+      "code": "chargeTimeType.specifiedDueDate",
+      "value": "Specified due date"
+    },
+    "chargeAppliesTo": {
+      "id": 3,
+      "code": "chargeAppliesTo.client",
+      "value": "Client"
+    },
+    "chargeCalculationType": {
+      "id": 1,
+      "code": "chargeCalculationType.flat",
+      "value": "Flat"
+    },
+    "chargePaymentMode": {
+      "id": 0,
+      "code": "chargepaymentmode.regular",
+      "value": "Regular"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Loan charge",
+    "active": true,
+    "penalty": true,
+    "currency": {
+      "code": "IDR",
+      "name": "Indonesian Rupiah",
+      "decimalPlaces": 2,
+      "nameCode": "currency.IDR",
+      "displayLabel": "Indonesian Rupiah [IDR]"
+    },
+    "amount": 10000.000000,
+    "chargeTimeType": {
+      "id": 8,
+      "code": "chargeTimeType.instalmentFee",
+      "value": "Installment Fee"
+    },
+    "chargeAppliesTo": {
+      "id": 1,
+      "code": "chargeAppliesTo.loan",
+      "value": "Loan"
+    },
+    "chargeCalculationType": {
+      "id": 4,
+      "code": "chargeCalculationType.percent.of.interest",
+      "value": "% Interest"
+    },
+    "chargePaymentMode": {
+      "id": 0,
+      "code": "chargepaymentmode.regular",
+      "value": "Regular"
+    }
+  },
+  {
+    "id": 1,
+    "name": "Service Charge Borrower",
+    "active": true,
+    "penalty": false,
+    "currency": {
+      "code": "IDR",
+      "name": "Indonesian Rupiah",
+      "decimalPlaces": 2,
+      "nameCode": "currency.IDR",
+      "displayLabel": "Indonesian Rupiah [IDR]"
+    },
+    "amount": 3.000000,
+    "chargeTimeType": {
+      "id": 8,
+      "code": "chargeTimeType.instalmentFee",
+      "value": "Installment Fee"
+    },
+    "chargeAppliesTo": {
+      "id": 1,
+      "code": "chargeAppliesTo.loan",
+      "value": "Loan"
+    },
+    "chargeCalculationType": {
+      "id": 2,
+      "code": "chargeCalculationType.percent.of.amount",
+      "value": "% Amount"
+    },
+    "chargePaymentMode": {
+      "id": 0,
+      "code": "chargepaymentmode.regular",
+      "value": "Regular"
+    }
+  }
+]
