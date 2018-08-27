@@ -16,11 +16,11 @@ type ClientCharge struct {
 	Amount            float64   `json:"amount"`
 	AmountPaid        float64   `json:"amountPaid"`
 	AmountOutStanding float64   `json:"amountOutstanding"`
+	Currency          Currency  `json:"currency"`
 	ChargeTime        CodeValue `json:"chargeTimeType"`
 	Active            bool      `json:"isActive"`
 	Paid              bool      `json:"isPaid"`
 }
-
 
 type chargeResponse struct {
 	ResourceID int64 `json:"resourceId"`

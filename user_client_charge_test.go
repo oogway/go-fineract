@@ -44,6 +44,7 @@ func GetClientChargesSuite(t *testing.T, client *Client) {
 			require.NotEmpty(t, charge.DueDate)
 			require.NotEmpty(t, charge.Amount)
 			require.NotEmpty(t, charge.ChargeTime)
+			require.NotNil(t, charge.Currency)
 		}
 	})
 
@@ -58,6 +59,7 @@ func GetClientChargesSuite(t *testing.T, client *Client) {
 			require.NotEmpty(t, charge.DueDate)
 			require.NotEmpty(t, charge.Amount)
 			require.NotEmpty(t, charge.ChargeTime)
+			require.NotNil(t, charge.Currency)
 		}
 	})
 
