@@ -6,13 +6,14 @@ import (
 )
 
 type ChargeTemplate struct {
-	Id                uint64    `json:"id"`
-	Name              string    `json:"name"`
-	Amount            float64   `json:"amount"`
-	ChargeTime        CodeValue `json:"chargeTimeType"`
-	ChargeAppliesTo   CodeValue `json:"chargeAppliesTo"`
-	Active            bool      `json:"active"`
-	Penalty           bool      `json:"penalty"`
+	Id              uint64    `json:"id"`
+	Name            string    `json:"name"`
+	Amount          float64   `json:"amount"`
+	ChargeTime      CodeValue `json:"chargeTimeType"`
+	ChargeAppliesTo CodeValue `json:"chargeAppliesTo"`
+	Currency        Currency  `json:"currency"`
+	Active          bool      `json:"active"`
+	Penalty         bool      `json:"penalty"`
 }
 
 func (client *Client) GetAllCharges() ([]*ChargeTemplate, error) {
