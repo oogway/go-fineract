@@ -1,0 +1,124 @@
+{
+  "id": 5,
+  "accountNo": "000000005",
+  "depositType": {
+    "id": 100,
+    "code": "depositAccountType.savingsDeposit",
+    "value": "Savings"
+  },
+  "clientId": 144,
+  "clientName": "TS-TOKO Fund 1",
+  "savingsProductId": 1,
+  "savingsProductName": "Fund Principal",
+  "fieldOfficerId": 0,
+  "status": {
+    "id": 300,
+    "code": "savingsAccountStatusType.active",
+    "value": "Active",
+    "submittedAndPendingApproval": false,
+    "approved": false,
+    "rejected": false,
+    "withdrawnByApplicant": false,
+    "active": true,
+    "closed": false,
+    "prematureClosed": false,
+    "transferInProgress": false,
+    "transferOnHold": false,
+    "matured": false
+  },
+  "subStatus": {
+    "id": 0,
+    "code": "SavingsAccountSubStatusEnum.none",
+    "value": "None",
+    "none": true,
+    "inactive": false,
+    "dormant": false,
+    "escheat": false,
+    "block": false,
+    "blockCredit": false,
+    "blockDebit": false
+  },
+  "timeline": {
+    "submittedOnDate": [
+      2018,
+      5,
+      16
+    ],
+    "submittedByUsername": "mifos",
+    "submittedByFirstname": "App",
+    "submittedByLastname": "Administrator",
+    "approvedOnDate": [
+      2018,
+      5,
+      16
+    ],
+    "approvedByUsername": "mifos",
+    "approvedByFirstname": "App",
+    "approvedByLastname": "Administrator",
+    "activatedOnDate": [
+      2018,
+      5,
+      16
+    ],
+    "activatedByUsername": "mifos",
+    "activatedByFirstname": "App",
+    "activatedByLastname": "Administrator"
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimalPlaces": 2,
+    "inMultiplesOf": 0,
+    "displaySymbol": "$",
+    "nameCode": "currency.USD",
+    "displayLabel": "US Dollar ($)"
+  },
+  "nominalAnnualInterestRate": 0,
+  "interestCompoundingPeriodType": {
+    "id": 1,
+    "code": "savings.interest.period.savingsCompoundingInterestPeriodType.daily",
+    "value": "Daily"
+  },
+  "interestPostingPeriodType": {
+    "id": 4,
+    "code": "savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
+    "value": "Monthly"
+  },
+  "interestCalculationType": {
+    "id": 1,
+    "code": "savingsInterestCalculationType.dailybalance",
+    "value": "Daily Balance"
+  },
+  "interestCalculationDaysInYearType": {
+    "id": 365,
+    "code": "savingsInterestCalculationDaysInYearType.days365",
+    "value": "365 Days"
+  },
+  "withdrawalFeeForTransfers": false,
+  "allowOverdraft": false,
+  "enforceMinRequiredBalance": false,
+  "withHoldTax": false,
+  "lastActiveTransactionDate": [
+    2018,
+    5,
+    17
+  ],
+  "isDormancyTrackingActive": false,
+  "summary": {
+    "currency": {
+      "code": "USD",
+      "name": "US Dollar",
+      "decimalPlaces": 2,
+      "inMultiplesOf": 0,
+      "displaySymbol": "$",
+      "nameCode": "currency.USD",
+      "displayLabel": "US Dollar ($)"
+    },
+    "totalDeposits": 100100,
+    "totalInterestPosted": 0,
+    "accountBalance": 100100,
+    "totalOverdraftInterestDerived": 0,
+    "interestNotPosted": 0,
+    "availableBalance": 100100
+  }
+}
