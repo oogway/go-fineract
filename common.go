@@ -40,7 +40,9 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
-	req.Header.Set("Authorization", "Basic "+BasicAuth(client.UserName, client.Password))
+	if client.UserName != "" && client.Password != "" {
+		req.Header.Set("Authorization", "Basic "+BasicAuth(client.UserName, client.Password))
+	}
 
 	var resp *http.Response
 	errTry := highbrow.Try(5, func() error {
