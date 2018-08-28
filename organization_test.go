@@ -20,5 +20,6 @@ func TestGetAllCharges(t *testing.T) {
 		require.NotEmpty(t, charge.Amount)
 		require.NotEmpty(t, charge.ChargeTime)
 		require.NotEmpty(t, charge.ChargeAppliesTo)
+		require.NotNil(t, charge.Currency)
 	}
 }
