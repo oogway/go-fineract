@@ -1,11 +1,11 @@
 package fineract
 
 import (
-	"time"
+	"fmt"
+	"net/http"
 	"net/url"
 	"path"
-	"net/http"
-	"fmt"
+	"time"
 )
 
 type ClientCharge struct {
@@ -31,7 +31,7 @@ func (client *Client) AddChargeToClient(clientID string, chargeID string, dueDat
 	path := client.HostName.ResolveReference(tempPath).String()
 	request := struct {
 		Amount     string `json:"amount"`
-		ChargeID   string `json:"chargeID"`
+		ChargeID   string `json:"chargeId"`
 		DateFormat string `json:"dateFormat"`
 		DueDate    string `json:"dueDate"`
 		Locale     string `json:"locale"`
