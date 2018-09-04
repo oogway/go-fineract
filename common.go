@@ -40,7 +40,9 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("fineract-platform-tenantid", "default")
-	req.Header.Set("Authorization", "Basic "+BasicAuth(client.UserName, client.Password))
+	if client.UserName != "" && client.Password != "" {
+		req.Header.Set("Authorization", "Basic "+BasicAuth(client.UserName, client.Password))
+	}
 
 	var resp *http.Response
 	errTry := highbrow.Try(5, func() error {
@@ -54,9 +56,9 @@ func (client *Client) MakeRequest(reqType, url string, payload interface{}, resp
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	log.Println(string(body))
-	log.Println(resp.StatusCode)
-	log.Println("------------------")
+	//log.Println(string(body))
+	//log.Println(resp.StatusCode)
+	//log.Println("------------------")
 	if resp.StatusCode != 200 {
 		rawMessage := json.RawMessage(body)
 		return &FineractError{GetFineractStatusCode(resp.StatusCode), &rawMessage}
