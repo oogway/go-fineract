@@ -168,6 +168,7 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 			TransactionDate:   time.Now().Format("02 January 2006"),
 			TransactionAmount: fmt.Sprintf("%v", txAmount),
 			PaymentTypeId:     paymentId,
+			Note:              "dummy",
 		}
 		_, err = client.AccountDeposit(accountId, req)
 		if err != nil {

@@ -61,6 +61,7 @@ type TxRequest struct {
 	TransactionDate   string `json:"transactionDate"`
 	TransactionAmount string `json:"transactionAmount"`
 	PaymentTypeId     string `json:"paymentTypeId"`
+	Note              string `json:"note"`
 }
 
 type TxResponse struct {

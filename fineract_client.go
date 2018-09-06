@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	fineractHost     = "https://10.10.8.47:8443"
+	fineractHost     = "https://dev-services-2.getblink.id:8443"
 	fineractUser     = "mifos"
 	fineractPassword = "password"
 )
