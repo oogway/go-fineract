@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/bmizerany/assert"
 )
 
-func makeClient(mock bool) (*Client, error) {
-	if mock {
-		return NewClient("", "", "", FineractOption{
-			Transport: &MockTransport{DirectoryPath: "testdata"},
-		})
-	}
-	return NewClient("https://"+fineractHost, fineractUser, fineractPassword, FineractOption{SkipVerify: true})
-}
+const (
+	LendingName = "TSFund"
+)
+
+var (
+	Lending string
+)
 
 func TestSuiteMock(t *testing.T) {
 	if !testing.Short() {
@@ -24,7 +25,7 @@ func TestSuiteMock(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fundId := "1884"
+	fundId := "144"
 	Suite(t, client, fundId)
 }
 
@@ -37,16 +38,23 @@ func TestSuite(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	//retrieve fundType
+	id, err := client.GetFundType(&GetFundTypeRequest{Name: LendingName})
+	if err != nil {
+		t.Fatalf("retrieve fund type: %v", err)
+	}
+	Lending = toString(id)
+
 	//retrieve fundID from GetFunds
-	req := FundsRequest{}
+	req := FundsRequest{Type: Lending}
 	resp, err := client.GetFunds(&req)
 	if err != nil {
 		t.Fatalf("retrieve list of fund(s): %v", err)
 	}
-	if len(resp.FundDetail) == 0 {
-		t.Fatalf("No fund retrieved, atleast one fund should exists")
+	if len(resp.Fund) == 0 {
+		t.Fatalf("no fund retrieved, atleast one fund should exists")
 	}
-	fundId := fmt.Sprintf("%v", resp.FundDetail[0].Id)
+	fundId := fmt.Sprintf("%v", resp.Fund[0].Id)
 
 	Suite(t, client, fundId)
 	ISuite(t, client, fundId)
@@ -54,21 +62,46 @@ func TestSuite(t *testing.T) {
 
 func Suite(t *testing.T, client *Client, fundId string) {
 	var fundInitialBalance float64
+	var accntId string
 
 	t.Run("TestGetFundValue", func(t *testing.T) {
-		resp, err := client.GetFundValue(fundId, nil)
+		resp, _, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
+		fundInitialBalance = resp
+		assert.NotEqual(t, currency, "")
+	})
 
-		fundInitialBalance = resp.Statement.Amount
+	t.Run("TestGetFundAccountId", func(t *testing.T) {
+		resp, err := client.GetFundAccountId(fundId)
+		if err != nil || resp.PrincipalAccountId == "" {
+			t.Fatalf("retrieve accountId(s) for fund: %v", err)
+		}
+		accntId = resp.PrincipalAccountId
 	})
 
 	t.Run("TestGetFunds", func(t *testing.T) {
-		req := FundsRequest{}
-		if _, err := client.GetFunds(&req); err != nil {
+		resp, err := client.GetFunds(&FundsRequest{Type: Lending})
+		if err != nil || resp.TotalFilteredRecords == 0 {
 			t.Fatalf("retrieve list of fund(s): %v", err)
 		}
+		assert.NotEqual(t, resp.Fund[0].Currency.Code, "")
+	})
+
+	t.Run("TestGetFund", func(t *testing.T) {
+		resp, err := client.GetFund(fundId)
+		if err != nil || resp.Id == 0 {
+			t.Fatalf("retrieve core details of fund: %v", err)
+		}
+	})
+
+	t.Run("TestGetAccount", func(t *testing.T) {
+		resp, err := client.GetAccount(accntId)
+		if err != nil || resp.ProductId == 0 {
+			t.Fatalf("retrieve core details of account: %v", err)
+		}
+		assert.NotEqual(t, resp.Currency.Code, "")
 	})
 
 	t.Run("TestGetPaymentType", func(t *testing.T) {
@@ -80,10 +113,17 @@ func Suite(t *testing.T, client *Client, fundId string) {
 			t.Fatalf("No payment type found, atleast one is required")
 		}
 	})
+
+	t.Run("TestGetFundAccounts", func(t *testing.T) {
+		if resp, err := client.GetFundAccounts(fundId); err != nil || len(resp.FundAccount) == 0 {
+			t.Fatalf("retrieve fund account: %v", err)
+		}
+	})
 }
 
 func ISuite(t *testing.T, client *Client, fundId string) {
 	var txAmount float64 = 500
+	var accountId, promiseAccountId string
 
 	resp, err := client.GetPaymentType(&GetPaymentTypeRequest{})
 	if err != nil {
@@ -94,58 +134,113 @@ func ISuite(t *testing.T, client *Client, fundId string) {
 	}
 	paymentId := fmt.Sprintf("%v", resp.PaymentMethod[0].Id)
 
+	//getAccountId
+	response, err := client.GetFundAccounts(fundId)
+	if err != nil {
+		t.Fatalf("failed to get accountId: %v", err)
+	}
+
+	for _, cursor := range response.FundAccount {
+		if cursor.ProductName == toString(Principal) && cursor.Status.Value == active {
+			accountId = cursor.AccountNo
+		}
+		if cursor.ProductName == toString(Promise) && cursor.Status.Value == active {
+			promiseAccountId = cursor.AccountNo
+		}
+	}
+	if accountId == "" {
+		t.Fatalf("failed to get accountId: %v", err)
+	}
+	if promiseAccountId == "" {
+		t.Fatalf("failed to get promiseAccountId: %v", err)
+	}
+
 	t.Run("TestFundIncrement", func(t *testing.T) {
-		before, err := client.GetFundValue(fundId, nil)
+		before, limitB, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
 		//increment
-		req := &FundIncrementRequest{
+		req := &TxRequest{
 			Locale:            "en",
 			DateFormat:        "dd MMMM yyyy",
 			TransactionDate:   time.Now().Format("02 January 2006"),
 			TransactionAmount: fmt.Sprintf("%v", txAmount),
 			PaymentTypeId:     paymentId,
+			Note:              "dummy",
 		}
-		_, err = client.FundIncrement(fundId, req)
+		_, err = client.AccountDeposit(accountId, req)
 		if err != nil {
 			t.Fatalf("Could not increment the fund value: %v", err)
 		}
 
-		after, err := client.GetFundValue(fundId, nil)
+		after, limitA, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
-		assertEqual(t, before.Statement.Amount+txAmount, after.Statement.Amount, "Fund balance was not incremented")
+		assertEqual(t, before+txAmount, after, "Fund balance was not incremented")
+		assertEqual(t, limitA, limitB, "Fund Increment should not impact fund promise")
+		assert.NotEqual(t, currency, "")
 	})
 
 	t.Run("TestFundDecrement", func(t *testing.T) {
-		before, err := client.GetFundValue(fundId, nil)
+		before, limitB, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
-		//increment
-		req := &FundDecrementRequest{
+		//decrement
+		req := &TxRequest{
 			Locale:            "en",
 			DateFormat:        "dd MMMM yyyy",
 			TransactionDate:   time.Now().Format("02 January 2006"),
 			TransactionAmount: fmt.Sprintf("%v", txAmount),
 			PaymentTypeId:     paymentId,
 		}
-		_, err = client.FundDecrement(fundId, req)
+		_, err = client.AccountWithdraw(accountId, req)
 		if err != nil {
 			t.Fatalf("Could not decrement the fund value: %v", err)
 		}
 
-		after, err := client.GetFundValue(fundId, nil)
+		after, limitA, currency, err := client.GetFundValue(fundId)
 		if err != nil {
 			t.Fatalf("Cannot get the fund value: %v", err)
 		}
 
-		assertEqual(t, before.Statement.Amount-txAmount, after.Statement.Amount, "Fund balance was not decremented")
+		assertEqual(t, before-txAmount, after, "Fund balance was not decremented")
+		assert.NotEqual(t, currency, "")
+		assert.Equal(t, limitA, limitB, "Fund Decrement should not impact fund promise")
+	})
+
+	t.Run("TestFundReserve", func(t *testing.T) {
+		before, limitB, currency, err := client.GetFundValue(fundId)
+		if err != nil {
+			t.Fatalf("Cannot get the fund value: %v", err)
+		}
+
+		//decrement
+		req := &TxRequest{
+			Locale:            "en",
+			DateFormat:        "dd MMMM yyyy",
+			TransactionDate:   time.Now().Format("02 January 2006"),
+			TransactionAmount: fmt.Sprintf("%v", txAmount),
+			PaymentTypeId:     paymentId,
+		}
+		_, err = client.AccountWithdraw(promiseAccountId, req)
+		if err != nil {
+			t.Fatalf("Could not decrement the fund value: %v", err)
+		}
+
+		after, limitA, currency, err := client.GetFundValue(fundId)
+		if err != nil {
+			t.Fatalf("Cannot get the fund value: %v", err)
+		}
+
+		assertEqual(t, limitB-txAmount, limitA, "Fund was not reserved")
+		assert.NotEqual(t, currency, "")
+		assert.Equal(t, before, after, "Fund reserve should not impact fund balance")
 	})
 }
 
